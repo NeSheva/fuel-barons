@@ -1,0 +1,2463 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Паливні барони: Цінова стратегія фірми — Інтерактивний семінар</title>
+  <!-- PeerJS for zero-config P2P multiplayer across devices when hosted -->
+  <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+  <style>
+    :root {
+      --bg-dark: #0b1120;
+      --bg-card: #131c31;
+      --bg-card-hover: #1a2642;
+      --bg-panel: #1e293b;
+      --border: #2dd4bf33;
+      --border-subtle: #334155;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent-amber: #f59e0b;
+      --accent-amber-glow: rgba(245, 158, 11, 0.2);
+      --accent-teal: #14b8a6;
+      --accent-blue: #3b82f6;
+      --accent-purple: #8b5cf6;
+      --danger: #ef4444;
+      --success: #10b981;
+      --warning: #eab308;
+      --radius: 14px;
+      --shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: radial-gradient(circle at 15% 15%, #172554 0%, var(--bg-dark) 55%);
+      color: var(--text-main);
+      min-height: 100vh;
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    /* Top Header */
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 24px;
+      background: rgba(15, 23, 42, 0.88);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-subtle);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--accent-amber), #ea580c);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      font-weight: 800;
+      color: #0f172a;
+      box-shadow: 0 0 16px var(--accent-amber-glow);
+    }
+
+    .brand-title {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      background: var(--bg-panel);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+    }
+
+    .badge-amber {
+      background: rgba(245, 158, 11, 0.15);
+      border-color: rgba(245, 158, 11, 0.4);
+      color: #fbbf24;
+    }
+
+    .badge-teal {
+      background: rgba(20, 184, 166, 0.15);
+      border-color: rgba(20, 184, 166, 0.4);
+      color: #2dd4bf;
+    }
+
+    .badge-danger {
+      background: rgba(239, 68, 68, 0.15);
+      border-color: rgba(239, 68, 68, 0.4);
+      color: #f87171;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 9px 16px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      border: 1px solid transparent;
+      text-decoration: none;
+      color: var(--text-main);
+      background: var(--bg-panel);
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.1);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent-amber), #d97706);
+      color: #0f172a;
+      font-weight: 700;
+      box-shadow: 0 4px 14px var(--accent-amber-glow);
+    }
+
+    .btn-teal {
+      background: linear-gradient(135deg, var(--accent-teal), #0d9488);
+      color: #042f2e;
+      font-weight: 700;
+    }
+
+    .btn-outline {
+      background: transparent;
+      border-color: var(--border-subtle);
+      color: var(--text-main);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--accent-amber);
+      background: rgba(245, 158, 11, 0.08);
+    }
+
+    .btn-danger {
+      background: rgba(239, 68, 68, 0.2);
+      border-color: rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
+    }
+
+    .btn-sm {
+      padding: 6px 12px;
+      font-size: 12px;
+      border-radius: 8px;
+    }
+
+    .btn-lg {
+      padding: 13px 24px;
+      font-size: 15px;
+      border-radius: 12px;
+    }
+
+    /* Container */
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    /* Cards & Grids */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+      gap: 20px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 18px;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius);
+      padding: 22px;
+      box-shadow: var(--shadow);
+      position: relative;
+    }
+
+    .card-highlight {
+      border-color: rgba(245, 158, 11, 0.5);
+      background: linear-gradient(180deg, rgba(245, 158, 11, 0.07) 0%, var(--bg-card) 100%);
+    }
+
+    .card-teal {
+      border-color: rgba(20, 184, 166, 0.45);
+      background: linear-gradient(180deg, rgba(20, 184, 166, 0.07) 0%, var(--bg-card) 100%);
+    }
+
+    .card-title {
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .card-sub {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    /* Inputs */
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: #cbd5e1;
+      margin-bottom: 6px;
+    }
+
+    .form-hint {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .input, .select {
+      width: 100%;
+      padding: 10px 13px;
+      border-radius: 9px;
+      border: 1px solid var(--border-subtle);
+      background: #0f172a;
+      color: var(--text-main);
+      font-size: 14px;
+      font-weight: 600;
+      transition: border-color 0.15s;
+    }
+
+    .input:focus, .select:focus {
+      outline: none;
+      border-color: var(--accent-amber);
+      box-shadow: 0 0 0 3px var(--accent-amber-glow);
+    }
+
+    /* Stepper / Round Navigation */
+    .round-stepper {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 22px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+
+    .step-pill {
+      flex: 1;
+      min-width: 155px;
+      padding: 11px 14px;
+      border-radius: 11px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      cursor: pointer;
+      transition: all 0.18s;
+      text-align: left;
+    }
+
+    .step-pill.active {
+      border-color: var(--accent-amber);
+      background: rgba(245, 158, 11, 0.12);
+      box-shadow: 0 0 18px rgba(245, 158, 11, 0.15);
+    }
+
+    .step-pill.completed {
+      border-color: rgba(16, 185, 129, 0.45);
+    }
+
+    .step-num {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+
+    .step-pill.active .step-num {
+      color: var(--accent-amber);
+    }
+
+    .step-name {
+      font-size: 13.5px;
+      font-weight: 700;
+      margin-top: 2px;
+    }
+
+    /* Timer Banner */
+    .timer-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #0f172a;
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 12px 18px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .timer-display {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--accent-amber);
+      letter-spacing: 0.04em;
+    }
+
+    .timer-display.urgent {
+      color: var(--danger);
+      animation: pulse 1s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.55; }
+    }
+
+    /* Tables */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+    }
+
+    .data-table th {
+      text-align: left;
+      padding: 10px 12px;
+      background: #0f172a;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .data-table td {
+      padding: 11px 12px;
+      border-bottom: 1px solid rgba(51, 65, 85, 0.5);
+    }
+
+    .data-table tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .num {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      font-weight: 600;
+    }
+
+    /* Price Corridor 3C Bar */
+    .corridor-bar {
+      height: 16px;
+      border-radius: 999px;
+      background: linear-gradient(90deg,
+        #ef4444 0%, #ef4444 25%,
+        #eab308 25%, #eab308 55%,
+        #10b981 55%, #10b981 85%,
+        #3b82f6 85%, #3b82f6 100%);
+      position: relative;
+      margin: 14px 0 24px 0;
+    }
+
+    .corridor-marker {
+      position: absolute;
+      top: -6px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #fff;
+      border: 4px solid var(--accent-amber);
+      transform: translateX(-50%);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.6);
+      transition: left 0.15s ease;
+    }
+
+    .corridor-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* 3x3 Matrix */
+    .matrix-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .matrix-cell {
+      padding: 10px;
+      border-radius: 9px;
+      background: #0f172a;
+      border: 1px solid var(--border-subtle);
+      cursor: pointer;
+      font-size: 12px;
+      text-align: center;
+      transition: all 0.15s;
+    }
+
+    .matrix-cell:hover {
+      border-color: var(--accent-amber);
+    }
+
+    .matrix-cell.selected {
+      background: rgba(245, 158, 11, 0.18);
+      border-color: var(--accent-amber);
+      color: #fde68a;
+      font-weight: 700;
+    }
+
+    /* Secret Oligopoly Chat */
+    .chat-box {
+      background: #090e1a;
+      border: 1px solid var(--border-subtle);
+      border-radius: 11px;
+      height: 210px;
+      overflow-y: auto;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .chat-msg {
+      padding: 7px 11px;
+      border-radius: 9px;
+      background: #131c31;
+      font-size: 13px;
+      border-left: 3px solid var(--accent-amber);
+    }
+
+    .chat-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 2px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* Modal / Drawer */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(3, 7, 18, 0.78);
+      backdrop-filter: blur(6px);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal-content {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      max-width: 820px;
+      width: 100%;
+      max-height: 88vh;
+      overflow-y: auto;
+      padding: 26px;
+      box-shadow: var(--shadow);
+    }
+
+    /* Gas station price board styling */
+    .pylon-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin: 16px 0;
+    }
+
+    .pylon-card {
+      background: linear-gradient(165deg, #1e293b 0%, #0f172a 100%);
+      border: 2px solid #334155;
+      border-radius: 14px;
+      padding: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pylon-card.ready {
+      border-color: var(--success);
+    }
+
+    .led-price {
+      font-family: 'JetBrains Mono', monospace;
+      background: #050811;
+      border: 1px solid #334155;
+      color: #f59e0b;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 24px;
+      font-weight: 800;
+      text-align: center;
+      letter-spacing: 0.06em;
+      margin: 10px 0;
+      text-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+    }
+
+    .formula-box {
+      background: rgba(15, 23, 42, 0.9);
+      border-left: 3px solid var(--accent-teal);
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 12.5px;
+      margin: 10px 0;
+      color: #e2e8f0;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 14px;
+      }
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+      .timer-display {
+        font-size: 22px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP NAVIGATION BAR -->
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-icon">⛽</div>
+      <div>
+        <div class="brand-title">ПАЛИВНІ БАРОНИ</div>
+        <div class="brand-sub">Бізнес-симулятор до семінару «Цінова стратегія фірми»</div>
+      </div>
+    </div>
+
+    <div class="top-actions">
+      <span id="syncStatusBadge" class="badge badge-teal" title="Працює локальна синхронізація між вкладками + хмарний P2P">
+        🟢 Синхронізація активна
+      </span>
+      <span id="roleBadge" class="badge badge-amber">Режим: Вибір ролі</span>
+      <button class="btn btn-outline btn-sm" onclick="toggleFormulaModal(true)">📘 Формули з лекції</button>
+      <button class="btn btn-outline btn-sm" onclick="toggleHostOverrideModal(true)" id="btnManualControl">⚙️ Панель ведучого / Боти</button>
+      <button class="btn btn-outline btn-sm" onclick="switchRoleView('landing')">🔄 Змінити роль</button>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- ==========================================
+         VIEW 1: LANDING / ROLE SELECTION
+         ========================================== -->
+    <section id="view-landing">
+      <div class="card card-highlight" style="margin-bottom: 24px; text-align: center; padding: 32px 24px;">
+        <span class="badge badge-amber" style="margin-bottom: 10px;">Семінарське заняття • 80 хвилин • 3 раунди • 3–4 команди</span>
+        <h1 style="font-size: 30px; font-weight: 800; margin-bottom: 10px;">
+          Бізнес-симулятор ринку АЗК «Паливні барони»
+        </h1>
+        <p style="max-width: 760px; margin: 0 auto 24px auto; color: var(--text-muted); font-size: 15px;">
+          Кожна команда очолює раду директорів національної мережі АЗК. Пройдіть шлях від розрахунку беззбитковості та запуску нового пального EcoPulse-100 до олігопольної змови, сліпого державного тендеру та цінової дискримінації між сегментами.
+        </p>
+
+        <div class="grid-2" style="max-width: 860px; margin: 0 auto; text-align: left;">
+          <!-- Host Role Card -->
+          <div class="card" style="border-color: rgba(245, 158, 11, 0.5);">
+            <div class="card-title">
+              <span>🖥️ Екран Ведучого (Проєктор / Zoom)</span>
+              <span class="badge badge-amber">Для організатора</span>
+            </div>
+            <p class="card-sub">
+              Керуйте раундами й таймером, виводьте QR-код для підключення капітанів, демонструйте графіки попиту, перевірки АМКУ та живий лідерборд.
+            </p>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+              <button class="btn btn-primary" style="flex: 1;" onclick="enterHostMode()">
+                🚀 Відкрити екран Ведучого
+              </button>
+              <button class="btn btn-outline" onclick="enterHostModeAndSimulate()">
+                ⚡ Демо з ботами
+              </button>
+            </div>
+          </div>
+
+          <!-- Team Captain Role Card -->
+          <div class="card card-teal">
+            <div class="card-title">
+              <span>📱 Екран Капітана Команди</span>
+              <span class="badge badge-teal">Для сесійних залів</span>
+            </div>
+            <p class="card-sub">
+              Зайдіть зі смартфона або ноутбука в сесійній залі Zoom, демонструйте екран своїй команді, користуйтеся таємним чатом і фіксуйте цінові рішення.
+            </p>
+            <div class="form-group" style="margin-bottom: 10px;">
+              <select id="captainTeamSelect" class="select">
+                <option value="0">⛽ Команда 1 — Мережа «OKKO-Tech»</option>
+                <option value="1">⚡ Команда 2 — Мережа «WOG-Energy»</option>
+                <option value="2">🔥 Команда 3 — Мережа «UPG-Prime»</option>
+                <option value="3">💎 Команда 4 — Мережа «SOCAR-Neo»</option>
+              </select>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <input type="text" id="joinRoomCodeInput" class="input" placeholder="Код кімнати (необов'язково локально)" style="flex: 1;" />
+              <button class="btn btn-teal" onclick="enterCaptainMode()">
+                Увійти в гру →
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Seminar Roadmap Preview -->
+      <div class="grid-3">
+        <div class="card">
+          <div class="step-num" style="color: var(--accent-amber);">Раунд 1 • 20 хв (Блоки 1, 3, 4, 5.2, 5.4)</div>
+          <div class="card-title" style="margin-top: 4px;">Вихід на ринок та модель «3С»</div>
+          <p class="card-sub" style="margin-bottom: 0;">
+            Розрахунок ціни 4 методами (беззбитковість, правило націнки через еластичність, «витрати плюс», цільовий прибуток), індекс Лернера, вибір стратегії «зняття вершків» vs «проникнення» та матриця «Якість–Ціна».
+          </p>
+        </div>
+        <div class="card">
+          <div class="step-num" style="color: var(--accent-teal);">Раунд 2 • 25 хв (Блоки 2.1–2.3, 3.3, 5.3)</div>
+          <div class="card-title" style="margin-top: 4px;">Пастка олігополії, змова та Sunk Costs</div>
+          <p class="card-sub" style="margin-bottom: 0;">
+            Зламана крива попиту Свізі та модель Бертрана. Переговори в «Таємному чаті директорів», 2 ходи зміни цін на стелах АЗС, ризик штрафу АМКУ за картель та бліц-рішення щодо безповоротних витрат.
+          </p>
+        </div>
+        <div class="card">
+          <div class="step-num" style="color: #a78bfa;">Раунд 3 • 18 хв (Блоки 4.1, 5.3) + Фінал</div>
+          <div class="card-title" style="margin-top: 4px;">Цінова дискримінація та Сліпий тендер</div>
+          <p class="card-sub" style="margin-bottom: 0;">
+            Розподіл продажів між двома сегментами за правилом MR₁ = MR₂ = MC та закрита ставка (Sealed-Bid) на державний тендер із розрахунком очікуваного прибутку (P − C) × Pr(перемоги).
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         VIEW 2: HOST DASHBOARD (PROJECTOR / ZOOM)
+         ========================================== -->
+    <section id="view-host" class="hidden">
+      <!-- Round Navigation Stepper -->
+      <div class="round-stepper">
+        <button class="step-pill active" id="hostStep0" onclick="hostSetStage('lobby')">
+          <div class="step-num">Етап 0 • Оргмоменти (10 хв)</div>
+          <div class="step-name">Лобі та QR-підключення</div>
+        </button>
+        <button class="step-pill" id="hostStep1" onclick="hostSetStage('round1')">
+          <div class="step-num">Раунд 1 • 20 хв</div>
+          <div class="step-name">1. Запуск EcoPulse-100</div>
+        </button>
+        <button class="step-pill" id="hostStep2" onclick="hostSetStage('round2')">
+          <div class="step-num">Раунд 2 • 25 хв</div>
+          <div class="step-name">2. Олігополія та Змова</div>
+        </button>
+        <button class="step-pill" id="hostStep3" onclick="hostSetStage('round3')">
+          <div class="step-num">Раунд 3 • 18 хв</div>
+          <div class="step-name">3. Дискримінація + Тендер</div>
+        </button>
+        <button class="step-pill" id="hostStep4" onclick="hostSetStage('finale')">
+          <div class="step-num">Підсумок • 7 хв</div>
+          <div class="step-name">🏆 Фінал та Бліц-Kahoot</div>
+        </button>
+      </div>
+
+      <!-- Timer & Quick Controls Bar -->
+      <div class="timer-bar">
+        <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+          <div>
+            <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Таймер раунду</div>
+            <div id="hostTimerDisplay" class="timer-display">12:00</div>
+          </div>
+          <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+            <button class="btn btn-sm btn-primary" onclick="toggleTimer()" id="btnTimerToggle">▶️ Старт</button>
+            <button class="btn btn-sm btn-outline" onclick="setTimerMinutes(12)">12 хв</button>
+            <button class="btn btn-sm btn-outline" onclick="setTimerMinutes(15)">15 хв</button>
+            <button class="btn btn-sm btn-outline" onclick="setTimerMinutes(2)">2 хв (Бліц)</button>
+          </div>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+          <span class="badge" id="hostRoomCodeBadge">Код кімнати: ЛОКАЛЬНИЙ</span>
+          <button class="btn btn-sm btn-teal" onclick="initCloudRoom()" id="btnCreateCloudRoom">
+            🌐 Створити онлайн-код/QR
+          </button>
+          <button class="btn btn-sm btn-outline" onclick="simulateBotSubmissionsForCurrentStage()">
+            🤖 Заповнити за команди (Тест)
+          </button>
+          <button class="btn btn-sm btn-primary" onclick="hostCalculateAndRevealCurrentRound()" id="btnRevealRound">
+            📊 Підбити підсумки раунду
+          </button>
+        </div>
+      </div>
+
+      <!-- Live Team Status Strip (Gas Station Pylons) -->
+      <div class="pylon-grid" id="hostTeamPylons"></div>
+
+      <!-- HOST STAGE CONTENT CONTAINERS -->
+      <!-- Stage 0: Lobby -->
+      <div id="host-stage-lobby" class="card">
+        <div class="grid-2" style="align-items: center;">
+          <div>
+            <span class="badge badge-amber" style="margin-bottom: 8px;">Організаційний старт • 10 хвилин</span>
+            <h2 style="font-size: 24px; margin-bottom: 10px;">Підключення капітанів команд</h2>
+            <p class="card-sub">
+              1. Об'єднайте 14–15 студентів у <strong>4 команди</strong> (по 3–4 учасники — ради директорів мереж АЗК).<br/>
+              2. Капітан кожної команди сканує QR-код або відкриває посилання на сайт, обирає номер своєї команди та вводить код кімнати.<br/>
+              3. Під час кожного з 3 раундів команди виходять у сесійні зали Zoom на 12–15 хвилин, де капітан демонструє свій екран.
+            </p>
+            <div class="formula-box">
+              <strong>Порада ведучому:</strong> Ви можете тестувати гру просто зараз в одному браузері — відкрийте другу вкладку цього ж файлу в режимі «Екран Капітана», і всі дії миттєво синхронізуються! Або натисніть кнопку <strong>«🤖 Заповнити за команди (Тест)»</strong> угорі.
+            </div>
+            <div style="margin-top: 16px; display: flex; gap: 10px; flex-wrap: wrap;">
+              <button class="btn btn-primary btn-lg" onclick="hostSetStage('round1')">
+                Почати Раунд 1: Вихід на ринок →
+              </button>
+            </div>
+          </div>
+
+          <div style="text-align: center; background: #0f172a; padding: 20px; border-radius: 14px; border: 1px solid var(--border-subtle);">
+            <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 8px;">Скануйте QR-код або введіть код кімнати:</div>
+            <div id="qrCanvasContainer" style="background: #fff; width: 190px; height: 190px; margin: 0 auto 12px auto; border-radius: 12px; display: flex; align-items: center; justify-content: center; padding: 10px;">
+              <!-- Dynamic SVG QR / Room badge -->
+            </div>
+            <div id="hostBigRoomCode" style="font-family: monospace; font-size: 26px; font-weight: 800; color: var(--accent-amber); letter-spacing: 0.08em;">
+              LOCAL-SYNC
+            </div>
+            <div id="hostJoinLinkText" style="font-size: 11.5px; color: var(--text-muted); margin-top: 4px; word-break: break-all;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stage 1: Host Round 1 View -->
+      <div id="host-stage-round1" class="card hidden">
+        <div class="card-title">
+          <span>Раунд 1. Запуск преміального пального «EcoPulse-100» (Блоки 1, 3, 4, 5.2, 5.4)</span>
+          <span class="badge badge-amber">12 хв у сесійних залах + 8 хв розбір</span>
+        </div>
+        <p class="card-sub">
+          Команди розраховують 4 базові методи ціноутворення, індекс Лернера та обирають стратегію виходу на ринок («Зняття вершків» або «Проникнення» з ефектом масштабу).
+        </p>
+
+        <div class="grid-2">
+          <div style="background: #0f172a; padding: 16px; border-radius: 12px; border: 1px solid var(--border-subtle);">
+            <h3 style="font-size: 15px; margin-bottom: 10px; color: var(--accent-amber);">📋 Вхідні умови для всіх мереж АЗК (пакет 10 л):</h3>
+            <ul style="list-style: none; font-size: 13.5px; display: grid; gap: 7px;">
+              <li>• Середні змінні та граничні витрати: <strong>AVC = MC = 120 грн</strong></li>
+              <li>• Постійні витрати на запуск: <strong>FC = 300 000 грн</strong></li>
+              <li>• Плановий обсяг продажів: <strong>Q = 5 000 пакетів</strong></li>
+              <li>• Цільовий прибуток: <strong>π<sub>ціл</sub> = 200 000 грн</strong></li>
+              <li>• Націнка за методом «витрати плюс»: <strong>m = 20% (на ATC)</strong></li>
+              <li>• Цінова еластичність попиту: <strong>E = −2,5</strong></li>
+            </ul>
+            <div class="formula-box" style="margin-top: 12px;">
+              <strong>Ефект масштабу (Блок 5.2):</strong> Команди, які оберуть стратегію <em>«Проникнення»</em> (ціна ≤ 202 грн), у Раунді 2 отримають зниження AVC зі 120 грн до <strong>110 грн</strong> завдяки ефекту масштабу!
+            </div>
+          </div>
+
+          <div id="hostRound1ResultsPanel" style="background: #0f172a; padding: 16px; border-radius: 12px; border: 1px solid var(--border-subtle);">
+            <h3 style="font-size: 15px; margin-bottom: 10px; color: var(--accent-teal);">📊 Розбір результатів Раунду 1</h3>
+            <div id="hostRound1RevealContent">
+              <p style="color: var(--text-muted); font-size: 13.5px;">
+                Результати та еталонні розрахунки з'являться тут після того, як команди здадуть свої рішення і ви натиснете <strong>«📊 Підбити підсумки раунду»</strong>.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stage 2: Host Round 2 View -->
+      <div id="host-stage-round2" class="card hidden">
+        <div class="card-title">
+          <span>Раунд 2. Пастка олігополії: Картель на АЗС, Зламана крива Свізі та Sunk Costs</span>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn btn-sm btn-outline" id="btnSubround2_1" onclick="hostSetOligopolySubround(1)">Хід 2.1 (Перша ціна)</button>
+            <button class="btn btn-sm btn-outline" id="btnSubround2_2" onclick="hostSetOligopolySubround(2)">Хід 2.2 (Реакція + Бліц Sunk Costs)</button>
+          </div>
+        </div>
+        <p class="card-sub">
+          На ринку 4 великі мережі АЗК. Якщо всі тримають високу ціну (~240 грн) — отримують надприбуток, але є спокуса таємно демпінгнути (модель Бертрана) та ризик штрафу АМКУ (25% при абсолютно однакових цінах ≥ 235 грн).
+        </p>
+
+        <div class="grid-2">
+          <div>
+            <h3 style="font-size: 15px; margin-bottom: 8px; color: var(--accent-amber);">💬 Живий перехоплений чат директорів АЗК</h3>
+            <div class="chat-box" id="hostChatBox"></div>
+            <div style="display: flex; gap: 8px;">
+              <input type="text" id="hostChatInput" class="input" placeholder="Повідомлення від ведучого / Новина ринку (напр. АМКУ розпочав моніторинг цін!)" />
+              <button class="btn btn-primary btn-sm" onclick="sendChatMessage('📢 РИНКОВИЙ РЕГУЛЯТОР (Ведучий)', document.getElementById('hostChatInput').value, true)">Надіслати</button>
+            </div>
+          </div>
+
+          <div style="background: #0f172a; padding: 16px; border-radius: 12px; border: 1px solid var(--border-subtle);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+              <h3 style="font-size: 15px; color: var(--accent-teal);">📈 Підсумки олігопольної гри та Бліцу Sunk Costs</h3>
+              <label style="font-size: 12px; display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                <input type="checkbox" id="amkuForceCheck" /> Примусова перевірка АМКУ
+              </label>
+            </div>
+            <div id="hostRound2RevealContent">
+              <p style="color: var(--text-muted); font-size: 13.5px;">
+                Команди зараз роблять ставку в <strong>Ході <span id="hostCurrentSubroundLabel">2.1</span></strong>. Коли всі здадуть хід, натисніть <strong>«📊 Підбити підсумки раунду»</strong>, щоб показати розрахунок часток ринку за зламаною кривою попиту Свізі.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stage 3: Host Round 3 View -->
+      <div id="host-stage-round3" class="card hidden">
+        <div class="card-title">
+          <span>Раунд 3. Велика гра: Дискримінація 3-го ступеня + Сліпий державний тендер</span>
+          <span class="badge badge-teal">12 хв у сесійних залах + 6 хв розбір</span>
+        </div>
+        <p class="card-sub">
+          Два фінальні випробування: 1) Розподілити ціни між преміум-сегментом мегаполісу (Q₁ = 100 − P₁) та агро-експортом (Q₂ = 120 − 2P₂) при MC = 20; 2) Виграти закритий тендер (Sealed-Bid) при релевантних витратах C = 400 000 грн.
+        </p>
+
+        <div class="grid-2">
+          <div style="background: #0f172a; padding: 16px; border-radius: 12px; border: 1px solid var(--border-subtle);">
+            <h3 style="font-size: 15px; margin-bottom: 10px; color: var(--accent-amber);">🎯 Параметри фінального раунду</h3>
+            <div class="formula-box">
+              <strong>Завдання А (Дискримінація 3-го ступеня, Блок 5.3):</strong><br/>
+              • Ринок 1 (Внутрішній B2C): <code>Q₁ = 100 − P₁</code><br/>
+              • Ринок 2 (Експорт / Агро-сектор): <code>Q₂ = 120 − 2P₂</code><br/>
+              • Граничні витрати: <code>MC = 20</code> (масштаб прибутку ×100 грн)<br/>
+              • Умова оптимуму: <code>MR₁ = MR₂ = MC = 20</code> (вища ціна там, де попит менш еластичний!)
+            </div>
+            <div class="formula-box" style="border-left-color: var(--accent-amber);">
+              <strong>Завдання Б (Тендерне ціноутворення, Блок 4.1):</strong><br/>
+              • Релевантні витрати виконання замовлення: <code>C = 400 000 грн</code><br/>
+              • Максимальна резервна ціна тендеру: <code>900 000 грн</code><br/>
+              • Очікуваний прибуток: <code>E[π] = (P − 400 000) × Pr(перемоги)</code><br/>
+              • Головний контракт забирає команда з <strong>найнижчою ставкою P &gt; 400 000 грн</strong>!
+            </div>
+          </div>
+
+          <div style="background: #0f172a; padding: 16px; border-radius: 12px; border: 1px solid var(--border-subtle);">
+            <h3 style="font-size: 15px; margin-bottom: 10px; color: var(--accent-teal);">🏆 Розкриття конвертів тендеру та сегментації</h3>
+            <div id="hostRound3RevealContent">
+              <p style="color: var(--text-muted); font-size: 13.5px;">
+                Конверти з тендерними ставками закриті 🔒. Натисніть <strong>«📊 Підбити підсумки раунду»</strong>, коли команди зафіксують свої пропозиції.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stage 4: Finale Leaderboard & Kahoot Blitz -->
+      <div id="host-stage-finale" class="card hidden">
+        <div class="card-title">
+          <span>🏆 Фінальний рейтинг «Паливних баронів» та Підсумковий бліц</span>
+          <button class="btn btn-sm btn-outline" onclick="exportResultsCSV()">📥 Завантажити відомість (CSV)</button>
+        </div>
+
+        <div id="finaleLeaderboardContainer" style="margin-bottom: 24px;"></div>
+
+        <div class="card" style="background: #0f172a;">
+          <div class="card-title">
+            <span>⚡ Підсумковий бліц-опитувальник за планом лекції (10 питань)</span>
+            <span class="badge badge-amber">Для закріплення матеріалу</span>
+          </div>
+          <div id="kahootQuizContainer"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         VIEW 3: TEAM CAPTAIN SCREEN (BREAKOUT ROOM)
+         ========================================== -->
+    <section id="view-captain" class="hidden">
+      <div class="card card-teal" style="margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="font-size: 28px;" id="capTeamEmoji">⛽</div>
+            <div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <input type="text" id="capTeamNameInput" class="input" style="font-size: 17px; font-weight: 800; width: 250px; padding: 5px 10px;" onchange="captainUpdateTeamName(this.value)" />
+                <span class="badge badge-amber" id="capCostAdvantageBadge" style="display: none;">⚡ Ефект масштабу: AVC = 110 грн</span>
+              </div>
+              <div style="font-size: 12.5px; color: var(--text-muted); margin-top: 2px;">
+                Демонструйте цей екран своїй команді у сесійній залі Zoom
+              </div>
+            </div>
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 18px;">
+            <div style="text-align: right;">
+              <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Поточний капітал мережі</div>
+              <div id="capBalanceDisplay" style="font-size: 24px; font-weight: 800; color: var(--success);">500 000 грн</div>
+            </div>
+            <div style="text-align: right;">
+              <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Таймер</div>
+              <div id="capTimerDisplay" style="font-family: monospace; font-size: 22px; font-weight: 800; color: var(--accent-amber);">12:00</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Captain manual round switcher (in case playing offline without WebRTC) -->
+        <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+          <span style="font-size: 12px; color: var(--text-muted);">Активний етап (синхронізується з ведучим або перемикається вручну):</span>
+          <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+            <button class="btn btn-sm btn-outline" onclick="captainSwitchTab('round1')" id="capTabBtn1">Раунд 1: Запуск</button>
+            <button class="btn btn-sm btn-outline" onclick="captainSwitchTab('round2')" id="capTabBtn2">Раунд 2: Олігополія + Змова</button>
+            <button class="btn btn-sm btn-outline" onclick="captainSwitchTab('round3')" id="capTabBtn3">Раунд 3: Дискримінація + Тендер</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- CAPTAIN ROUND 1 PANEL -->
+      <div id="cap-panel-round1" class="card">
+        <div class="card-title">
+          <span>Раунд 1. Запуск преміального пального «EcoPulse-100»</span>
+          <span class="badge badge-amber" id="capR1StatusBadge">Очікує рішення</span>
+        </div>
+        <p class="card-sub">
+          Ваша мережа виводить на ринок нове пальне (розрахунок ведеться на стандартний талон 10 л). Спочатку розрахуйте 4 цінові орієнтири та індекс Лернера (до +150 000 грн бонусу за точність), а потім оберіть стратегію входу.
+        </p>
+
+        <div class="formula-box">
+          <strong>Дано для вашої мережі:</strong> <code>AVC = MC = 120 грн</code> | <code>FC = 300 000 грн</code> | Плановий обсяг <code>Q = 5 000 од.</code> | Цільовий прибуток <code>π = 200 000 грн</code> | Націнка «витрати плюс» <code>m = 20% (на ATC)</code> | Еластичність попиту <code>E = −2,5</code>.
+        </div>
+
+        <div class="grid-2" style="margin-top: 16px;">
+          <!-- Step 1: 4 Methods Calculation -->
+          <div style="background: #0f172a; padding: 18px; border-radius: 12px; border: 1px solid var(--border-subtle);">
+            <h3 style="font-size: 15px; margin-bottom: 12px; color: var(--accent-amber);">Крок 1. Калькуляція 4 методів ціноутворення (Блоки 2.2, 4.1)</h3>
+
+            <div class="form-group">
+              <label class="form-label">1. Ціна беззбитковості (P = AVC + FC / Q), грн:</label>
+              <input type="number" step="0.1" id="r1_breakeven" class="input" placeholder="Наприклад: 180" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">2. Оптимальна ціна за правилом націнки (P* = MC × E / (1 + E)), грн:</label>
+              <input type="number" step="0.1" id="r1_markup" class="input" placeholder="Використайте MC=120 та E=-2.5" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">3. Метод «Витрати плюс 20%» (P = ATC × (1 + m)), грн:</label>
+              <input type="number" step="0.1" id="r1_costplus" class="input" placeholder="Націнка 20% на повну собівартість ATC" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">4. Метод цільового прибутку (P = AVC + (FC + π) / Q), грн:</label>
+              <input type="number" step="0.1" id="r1_target" class="input" placeholder="Для досягнення π = 200 000 грн за Q = 5 000" />
+            </div>
+
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label">5. Індекс Лернера в точці оптимуму (L = −1 / E), десятковий дріб:</label>
+              <input type="number" step="0.01" id="r1_lerner" class="input" placeholder="Наприклад: 0.4" />
+            </div>
+          </div>
+
+          <!-- Step 2: Strategic Choice & 3C Corridor -->
+          <div style="background: #0f172a; padding: 18px; border-radius: 12px; border: 1px solid var(--border-subtle);">
+            <h3 style="font-size: 15px; margin-bottom: 12px; color: var(--accent-teal);">Крок 2. Вибір стратегії та цінового коридору «3С» (Блоки 3.2, 5.2, 5.4)</h3>
+
+            <div class="form-group">
+              <label class="form-label" style="display: flex; justify-content: space-between;">
+                <span>Фактична ціна вашої мережі на старті (P₁):</span>
+                <strong style="color: var(--accent-amber); font-size: 18px;"><span id="r1_priceVal">200</span> грн</strong>
+              </label>
+              <input type="range" id="r1_actualPrice" min="110" max="260" step="1" value="200" style="width: 100%; cursor: pointer;" oninput="updateCorridorVisual(this.value)" />
+
+              <div class="corridor-bar">
+                <div class="corridor-marker" id="r1_corridorMarker" style="left: 60%;"></div>
+              </div>
+              <div class="corridor-labels">
+                <span>110 (Нижче AVC)</span>
+                <span>120 (AVC)</span>
+                <span>180 (ATC)</span>
+                <span>200 (P* опт.)</span>
+                <span>260 (Стеля)</span>
+              </div>
+              <div id="r1_corridorZoneHint" class="form-hint" style="color: var(--success); font-weight: 600; margin-top: 6px;">
+                ✅ Прибуткова зона: ціна покриває ATC (180 грн) та близька до оптимуму за еластичністю.
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Стратегія виведення нового товару (Блок 5.2):</label>
+              <select id="r1_strategy" class="select">
+                <option value="penetration">🚀 Проникнення (низька ціна ≤ 202 грн → високий обсяг + зниження AVC до 110 грн у Раунді 2)</option>
+                <option value="skimming">👑 Зняття вершків (висока ціна ≥ 215 грн → преміум-маржа з нечутливих покупців зараз)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Оберіть клітинку в матриці «Якість – Ціна» (Блок 5.4):</label>
+              <div class="matrix-grid" id="r1_matrixGrid">
+                <div class="matrix-cell" onclick="selectMatrixCell('high_high', this)">Висока якість<br/>Висока ціна<br/><small>(Преміум)</small></div>
+                <div class="matrix-cell selected" onclick="selectMatrixCell('high_mid', this)">Висока якість<br/>Середня ціна<br/><small>(Висока цінність)</small></div>
+                <div class="matrix-cell" onclick="selectMatrixCell('high_low', this)">Висока якість<br/>Низька ціна<br/><small>(Агресивне завоювання)</small></div>
+              </div>
+            </div>
+
+            <button class="btn btn-primary btn-lg" style="width: 100%; margin-top: 10px;" onclick="submitCaptainRound1()">
+              ✅ Зафіксувати рішення Раунду 1
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- CAPTAIN ROUND 2 PANEL -->
+      <div id="cap-panel-round2" class="card hidden">
+        <div class="card-title">
+          <span>Раунд 2. Пастка олігополії: Картель чи цінова війна? (Хід <span id="capSubroundLabel">2.1</span>)</span>
+          <span class="badge badge-amber" id="capR2StatusBadge">Очікує рішення</span>
+        </div>
+        <p class="card-sub">
+          Ви конкуруєте з іншими 3 мережами АЗК. Зламана крива попиту Свізі: якщо ви піднімете ціну самі — втратите 70% клієнтів; якщо знизите — переманите трафік конкурентів, але ризикуєте обвалити ринок до рівня Бертрана.
+        </p>
+
+        <div class="grid-2">
+          <!-- Secret Oligopoly Chat -->
+          <div style="background: #0f172a; padding: 16px; border-radius: 12px; border: 1px solid var(--border-subtle);">
+            <h3 style="font-size: 15px; margin-bottom: 8px; color: var(--accent-amber);">🕵️ Закритий чат директорів АЗК (Таємні переговори)</h3>
+            <p class="form-hint" style="margin-bottom: 8px;">
+              Домовтеся про єдину високу ціну (~240 грн) або про «цінове лідерство» (наприклад, 236–239 грн, щоб уникнути штрафу АМКУ за ідентичні ціни!). Чи дотримаєтеся ви свого слова?
+            </p>
+            <div class="chat-box" id="capChatBox"></div>
+            <div style="display: flex; gap: 8px;">
+              <input type="text" id="capChatInput" class="input" placeholder="Напишіть іншим командам (напр.: Колеги, тримаємо 238 грн!)" onkeydown="if(event.key==='Enter') captainSendChat()" />
+              <button class="btn btn-teal btn-sm" onclick="captainSendChat()">Надіслати</button>
+            </div>
+          </div>
+
+          <!-- Oligopoly Price Decision + Sunk Cost Blitz -->
+          <div style="background: #0f172a; padding: 16px; border-radius: 12px; border: 1px solid var(--border-subtle);">
+            <h3 style="font-size: 15px; margin-bottom: 10px; color: var(--accent-teal);">⛽ Встановлення ціни на стелі АЗС (Хід <span id="capSubroundLabel2">2.1</span>)</h3>
+
+            <div class="form-group">
+              <label class="form-label" style="display: flex; justify-content: space-between;">
+                <span>Ваша ціна на табло АЗС (грн за 10 л):</span>
+                <strong style="color: var(--accent-amber); font-size: 20px;"><span id="r2_priceVal">225</span> грн</strong>
+              </label>
+              <input type="range" id="r2_oligopolyPrice" min="150" max="255" step="1" value="225" style="width: 100%; cursor: pointer;" oninput="document.getElementById('r2_priceVal').textContent = this.value" />
+              <div class="corridor-labels" style="margin-top: 4px;">
+                <span>150 (Жорсткий демпінг)</span>
+                <span>200 (Конкурентна)</span>
+                <span>220 (Базова)</span>
+                <span>240 (Картельний максимум)</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Тактика олігопольної взаємодії (Блок 5.3):</label>
+              <select id="r2_tactic" class="select">
+                <option value="leader">👑 Цінове лідерство / Координація (тримати маржу олігополії)</option>
+                <option value="follower">🤝 Наслідування лідера (безпечна справедлива ціна)</option>
+                <option value="bertrand">⚔️ Агресивне перехоплення трафіку (зниження ціни за моделлю Бертрана)</option>
+              </select>
+            </div>
+
+            <!-- Sunk Costs Blitz Box -->
+            <div style="margin-top: 14px; padding: 14px; border-radius: 10px; background: rgba(245, 158, 11, 0.09); border: 1px dashed var(--accent-amber);">
+              <div style="font-size: 13px; font-weight: 700; color: var(--accent-amber); margin-bottom: 4px;">
+                🚨 БЛІЦ-КЕЙС (Блок 3.3 — Релевантні vs Безповоротні Sunk Costs):
+              </div>
+              <p style="font-size: 12.5px; color: #e2e8f0; margin-bottom: 10px;">
+                Вночі ваші АЗК простоюють. Постійні витрати на оренду та персонал вже оплачені (FC — безповоротні, повна собівартість ATC = 180 грн, а ваші граничні витрати MC = AVC = <span id="capCurrentAVC">120</span> грн). Муніципальний автопарк пропонує викупити <strong>2 000 пакетів пального за нічним тарифом 140 грн/од.</strong> Бухгалтер проти, бо 140 &lt; 180 (ATC). Ваше рішення:
+              </p>
+              <select id="r2_sunkDecision" class="select">
+                <option value="accept">✅ Прийняти замовлення по 140 грн (бо P &gt; AVC, а FC — це нерелевантні sunk costs)</option>
+                <option value="reject">❌ Відхилити замовлення (не продавати нижче повної собівартості ATC = 180 грн)</option>
+              </select>
+            </div>
+
+            <button class="btn btn-primary btn-lg" style="width: 100%; margin-top: 14px;" onclick="submitCaptainRound2()">
+              ✅ Зафіксувати ціну на стелі АЗС
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- CAPTAIN ROUND 3 PANEL -->
+      <div id="cap-panel-round3" class="card hidden">
+        <div class="card-title">
+          <span>Раунд 3. Дискримінація 3-го ступеня + Сліпий державний тендер</span>
+          <span class="badge badge-amber" id="capR3StatusBadge">Очікує рішення</span>
+        </div>
+        <p class="card-sub">
+          Фінальний ривок! Розділіть ціни між двома ізольованими сегментами покупців і подайте закриту ставку на головний державний тендер року.
+        </p>
+
+        <div class="grid-2">
+          <!-- Part A: 3rd Degree Price Discrimination -->
+          <div style="background: #0f172a; padding: 18px; border-radius: 12px; border: 1px solid var(--border-subtle);">
+            <h3 style="font-size: 15px; margin-bottom: 10px; color: var(--accent-amber);">
+              Частина А. Цінова дискримінація 3-го ступеня (Блок 5.3)
+            </h3>
+            <p class="form-hint" style="margin-bottom: 12px;">
+              Ваша мережа продає паливні сертифікати у двох ізольованих сегментах при сталих граничних витратах <strong>MC = 20</strong>:<br/>
+              • Сегмент 1 (Міські B2C водії): <code>Q₁ = 100 − P₁</code> (відповідно <code>MR₁ = 100 − 2Q₁</code>)<br/>
+              • Сегмент 2 (Експорт / Агрохолдинги): <code>Q₂ = 120 − 2P₂</code> (відповідно <code>MR₂ = 60 − Q₂</code>)<br/>
+              Знайдіть оптимальні ціни P₁ і P₂ за умовою <code>MR₁ = MR₂ = MC = 20</code> (кожна умовна одиниця прибутку = 100 грн у капітал мережі!):
+            </p>
+
+            <div class="form-group">
+              <label class="form-label">Ціна P₁ для Сегменту 1 (Внутрішній преміум, менш еластичний попит):</label>
+              <input type="number" id="r3_p1" class="input" value="50" min="20" max="95" oninput="previewDiscriminationMath()" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Ціна P₂ для Сегменту 2 (Експорт / Агро, більш еластичний попит):</label>
+              <input type="number" id="r3_p2" class="input" value="45" min="20" max="59" oninput="previewDiscriminationMath()" />
+            </div>
+
+            <div class="formula-box" id="r3_discPreview">
+              Попередній розрахунок обсягів: Q₁ = 50, Q₂ = 30. Перевірте умову MR₁ = MR₂ = 20, щоб витиснути максимум (+12,5% над єдиною ціною)!
+            </div>
+          </div>
+
+          <!-- Part B: Sealed-Bid Tender -->
+          <div style="background: #0f172a; padding: 18px; border-radius: 12px; border: 1px solid var(--border-subtle);">
+            <h3 style="font-size: 15px; margin-bottom: 10px; color: var(--accent-teal);">
+              Частина Б. Сліпий державний тендер (Sealed-Bid, Блок 4.1)
+            </h3>
+            <p class="form-hint" style="margin-bottom: 12px;">
+              «Укрзалізниця» та муніципалітет оголосили закритий тендер на постачання пального. Ваші релевантні витрати на виконання контракту становлять <strong>C = 400 000 грн</strong>. Стеля ціни закупівлі — <strong>900 000 грн</strong>.
+            </p>
+
+            <div class="form-group">
+              <label class="form-label" style="display: flex; justify-content: space-between;">
+                <span>Ваша закрита тендерна ставка (P<sub>bid</sub>):</span>
+                <strong style="color: var(--accent-amber); font-size: 19px;"><span id="r3_bidVal">620 000</span> грн</strong>
+              </label>
+              <input type="range" id="r3_tenderBid" min="410000" max="880000" step="5000" value="620000" style="width: 100%; cursor: pointer;" oninput="updateTenderPreview(this.value)" />
+              <div class="corridor-labels" style="margin-top: 4px;">
+                <span>410 тис. (Мінімальна маржа)</span>
+                <span>600 тис. (Баланс)</span>
+                <span>880 тис. (Високий ризик програшу)</span>
+              </div>
+            </div>
+
+            <div class="formula-box" id="r3_tenderMathBox">
+              • Маржа в разі перемоги (P − C): <strong>+220 000 грн</strong><br/>
+              • Оціночна ймовірність перемоги Pr(P): <strong>56%</strong><br/>
+              • Математичне сподівання (P − C) × Pr(P): <strong>+123 200 грн</strong>
+            </div>
+
+            <button class="btn btn-primary btn-lg" style="width: 100%; margin-top: 14px;" onclick="submitCaptainRound3()">
+              🔒 Запечатати конверт і відправити ставку
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==========================================
+       MODAL 1: LECTURE FORMULAS CHEAT SHEET
+       ========================================== -->
+  <div class="modal-backdrop" id="formulaModal">
+    <div class="modal-content">
+      <div class="card-title">
+        <span>📘 Шпаргалка з формулами лекції «Цінова стратегія фірми»</span>
+        <button class="btn btn-sm btn-outline" onclick="toggleFormulaModal(false)">✕ Закрити</button>
+      </div>
+      <div class="grid-2" style="margin-top: 12px;">
+        <div class="formula-box">
+          <strong>Блок 2. Правило націнки та Індекс Лернера:</strong><br/>
+          • Граничний дохід і еластичність: <code>MR = P × (1 + 1/E) = MC</code><br/>
+          • Оптимальна ціна: <code>P* = MC × E / (1 + E)</code><br/>
+          • Індекс Лернера (міра ринкової влади): <code>L = (P − MC) / P = −1 / E</code><br/>
+          • Оптимальна націнка на MC: <code>m* = −1 / (1 + E)</code>
+        </div>
+        <div class="formula-box">
+          <strong>Блок 3. Модель «3С» та релевантні витрати:</strong><br/>
+          • Нижня межа в короткому періоді: <code>P ≥ AVC</code> (точка закриття)<br/>
+          • Нижня межа в довгому періоді: <code>P ≥ ATC</code><br/>
+          • Безповоротні витрати (<em>sunk costs</em>, вже понесені FC) <strong>не враховуються</strong> при прийнятті короткострокових спецзамовлень!
+        </div>
+        <div class="formula-box">
+          <strong>Блок 4. Методи ціноутворення:</strong><br/>
+          • Ціна беззбитковості: <code>P = AVC + FC / Q</code><br/>
+          • «Витрати плюс»: <code>P = ATC × (1 + m)</code>, де <code>ATC = AVC + FC / Q</code><br/>
+          • Цільовий прибуток: <code>P = AVC + (FC + π<sub>ціл</sub>) / Q</code><br/>
+          • Тендерне (Sealed-Bid): <code>max E[π] = (P − C) × Pr(перемоги)</code>
+        </div>
+        <div class="formula-box">
+          <strong>Блок 5. Цінова дискримінація 3-го ступеня:</strong><br/>
+          • Правило оптимізації між двома ринками: <code>MR₁ = MR₂ = MC</code><br/>
+          • Для лінійного попиту <code>P = a − bQ</code> граничний дохід має вдвічі крутіший нахил: <code>MR = a − 2bQ</code>.<br/>
+          • Вища ціна завжди встановлюється на ринку з <strong>менш еластичним</strong> попитом!
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       MODAL 2: HOST OVERRIDE / MANUAL CONTROL
+       ========================================== -->
+  <div class="modal-backdrop" id="hostOverrideModal">
+    <div class="modal-content">
+      <div class="card-title">
+        <span>⚙️ Панель керування командами та резервного введення</span>
+        <button class="btn btn-sm btn-outline" onclick="toggleHostOverrideModal(false)">✕ Закрити</button>
+      </div>
+      <p class="card-sub">
+        Якщо якась команда озвучує своє рішення голосом у Zoom або ви хочете протестувати гру самостійно, тут можна відредагувати назви, баланс або згенерувати ходи.
+      </p>
+      <div id="hostOverrideTeamsTable"></div>
+      <div style="margin-top: 16px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+        <button class="btn btn-danger btn-sm" onclick="resetEntireGame()">🗑️ Скинути гру на початок</button>
+        <button class="btn btn-teal btn-sm" onclick="simulateBotSubmissionsForCurrentStage(); toggleHostOverrideModal(false);">🤖 Заповнити поточний раунд розумними ботами</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /**************************************************************
+     * 1. GAME STATE & SYNCHRONIZATION ARCHITECTURE
+     * Supports:
+     *  - Local multi-tab sync (BroadcastChannel + localStorage)
+     *  - Cloud P2P WebRTC sync (PeerJS) across student phones/laptops
+     *  - Host manual override & 1-click Bot Simulation
+     **************************************************************/
+    const STORAGE_KEY = 'FUEL_BARONS_SEMINAR_STATE_V1';
+    const localChannel = ('BroadcastChannel' in window) ? new BroadcastChannel('fuel_barons_sync') : null;
+
+    function createInitialState() {
+      return {
+        roomCode: 'LOCAL-SYNC',
+        stage: 'lobby', // lobby | round1 | round2 | round3 | finale
+        oligopolySubround: 1, // 1 or 2
+        timerSeconds: 720,
+        timerRunning: false,
+        round1Revealed: false,
+        round2Sub1Revealed: false,
+        round2Revealed: false,
+        round3Revealed: false,
+        amkuTriggered: false,
+        chatMessages: [
+          { sender: '📢 Регулятор ринку', text: 'Ласкаво просимо до закритого чату директорів мереж АЗК! Пам’ятайте: АМКУ слідкує за підозріло однаковими цінами.', time: '10:00', isSystem: true }
+        ],
+        teams: [
+          {
+            id: 0,
+            name: 'OKKO-Tech',
+            emoji: '⛽',
+            balance: 500000,
+            avc: 120,
+            hasScaleEffect: false,
+            r1: { submitted: false, breakeven: 180, markup: 200, costplus: 216, target: 220, lerner: 0.4, actualPrice: 200, strategy: 'penetration', matrix: 'high_mid', profitEarned: 0, bonusEarned: 0 },
+            r2: { sub1Submitted: false, price1: 225, sub2Submitted: false, price2: 220, tactic: 'leader', sunkDecision: 'accept', profitSub1: 0, profitSub2: 0, sunkProfit: 0, amkuFine: 0 },
+            r3: { submitted: false, p1: 60, p2: 40, tenderBid: 610000, discProfit: 0, tenderExpectedProfit: 0, tenderWonBonus: 0, isTenderWinner: false }
+          },
+          {
+            id: 1,
+            name: 'WOG-Energy',
+            emoji: '⚡',
+            balance: 500000,
+            avc: 120,
+            hasScaleEffect: false,
+            r1: { submitted: false, breakeven: 180, markup: 200, costplus: 216, target: 220, lerner: 0.4, actualPrice: 220, strategy: 'skimming', matrix: 'high_high', profitEarned: 0, bonusEarned: 0 },
+            r2: { sub1Submitted: false, price1: 235, sub2Submitted: false, price2: 225, tactic: 'follower', sunkDecision: 'accept', profitSub1: 0, profitSub2: 0, sunkProfit: 0, amkuFine: 0 },
+            r3: { submitted: false, p1: 55, p2: 42, tenderBid: 640000, discProfit: 0, tenderExpectedProfit: 0, tenderWonBonus: 0, isTenderWinner: false }
+          },
+          {
+            id: 2,
+            name: 'UPG-Prime',
+            emoji: '🔥',
+            balance: 500000,
+            avc: 120,
+            hasScaleEffect: false,
+            r1: { submitted: false, breakeven: 180, markup: 200, costplus: 216, target: 220, lerner: 0.4, actualPrice: 195, strategy: 'penetration', matrix: 'high_low', profitEarned: 0, bonusEarned: 0 },
+            r2: { sub1Submitted: false, price1: 205, sub2Submitted: false, price2: 200, tactic: 'bertrand', sunkDecision: 'accept', profitSub1: 0, profitSub2: 0, sunkProfit: 0, amkuFine: 0 },
+            r3: { submitted: false, p1: 58, p2: 38, tenderBid: 575000, discProfit: 0, tenderExpectedProfit: 0, tenderWonBonus: 0, isTenderWinner: false }
+          },
+          {
+            id: 3,
+            name: 'SOCAR-Neo',
+            emoji: '💎',
+            balance: 500000,
+            avc: 120,
+            hasScaleEffect: false,
+            r1: { submitted: false, breakeven: 180, markup: 200, costplus: 216, target: 220, lerner: 0.4, actualPrice: 230, strategy: 'skimming', matrix: 'high_high', profitEarned: 0, bonusEarned: 0 },
+            r2: { sub1Submitted: false, price1: 235, sub2Submitted: false, price2: 230, tactic: 'leader', sunkDecision: 'reject', profitSub1: 0, profitSub2: 0, sunkProfit: 0, amkuFine: 0 },
+            r3: { submitted: false, p1: 47, p2: 47, tenderBid: 670000, discProfit: 0, tenderExpectedProfit: 0, tenderWonBonus: 0, isTenderWinner: false }
+          }
+        ]
+      };
+    }
+
+    let gameState = loadStateFromStorage() || createInitialState();
+    let currentRole = 'landing'; // landing | host | captain
+    let currentCaptainTeamId = 0;
+    let selectedMatrixCell = 'high_mid';
+    let timerInterval = null;
+
+    // PeerJS P2P variables
+    let peer = null;
+    let hostConnections = [];
+    let clientConnection = null;
+
+    function loadStateFromStorage() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : null;
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function saveAndBroadcastState(actionPacket = null) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(gameState));
+      } catch (e) {}
+
+      if (localChannel) {
+        localChannel.postMessage({ type: 'STATE_SYNC', state: gameState });
+      }
+
+      // If we are Host in P2P mode, broadcast state to all connected captains
+      if (currentRole === 'host' && hostConnections.length > 0) {
+        hostConnections.forEach(conn => {
+          if (conn && conn.open) {
+            conn.send({ type: 'STATE_SYNC', state: gameState });
+          }
+        });
+      }
+
+      // If we are Captain in P2P mode and have an actionPacket, send to Host
+      if (currentRole === 'captain' && clientConnection && clientConnection.open && actionPacket) {
+        clientConnection.send(actionPacket);
+      }
+
+      renderAll();
+    }
+
+    if (localChannel) {
+      localChannel.onmessage = (ev) => {
+        if (ev.data && ev.data.type === 'STATE_SYNC') {
+          gameState = ev.data.state;
+          renderAll();
+        }
+      };
+    }
+
+    window.addEventListener('storage', (ev) => {
+      if (ev.key === STORAGE_KEY && ev.newValue) {
+        try {
+          gameState = JSON.parse(ev.newValue);
+          renderAll();
+        } catch (e) {}
+      }
+    });
+
+    /**************************************************************
+     * 2. CLOUD P2P MULTIPLAYER (PeerJS WebRTC)
+     **************************************************************/
+    function initCloudRoom() {
+      if (typeof Peer === 'undefined') {
+        alert('Бібліотека PeerJS недоступна (немає інтернету). Локальна синхронізація між вкладками працює автоматично!');
+        return;
+      }
+      const shortCode = 'BARON-' + Math.floor(1000 + Math.random() * 9000);
+      const btn = document.getElementById('btnCreateCloudRoom');
+      btn.textContent = '⏳ Створення...';
+
+      peer = new Peer(shortCode);
+      peer.on('open', (id) => {
+        gameState.roomCode = id;
+        btn.textContent = '✅ Онлайн-кімната активна';
+        document.getElementById('syncStatusBadge').textContent = '🌐 Хмарна P2P Кімната: ' + id;
+        saveAndBroadcastState();
+        renderQRBox();
+      });
+
+      peer.on('connection', (conn) => {
+        hostConnections.push(conn);
+        conn.on('open', () => {
+          conn.send({ type: 'STATE_SYNC', state: gameState });
+          document.getElementById('syncStatusBadge').textContent = `🌐 Підключено капітанів: ${hostConnections.length}`;
+        });
+        conn.on('data', (data) => {
+          handleIncomingClientAction(data);
+        });
+      });
+
+      peer.on('error', (err) => {
+        console.warn('PeerJS warning:', err);
+        btn.textContent = '🌐 Оновити код';
+      });
+    }
+
+    function connectCaptainToCloudHost(roomCode) {
+      if (!roomCode || roomCode === 'LOCAL-SYNC' || typeof Peer === 'undefined') return;
+      peer = new Peer();
+      peer.on('open', () => {
+        clientConnection = peer.connect(roomCode.trim().toUpperCase());
+        clientConnection.on('open', () => {
+          document.getElementById('syncStatusBadge').textContent = '🌐 Підключено до Ведучого (' + roomCode + ')';
+        });
+        clientConnection.on('data', (data) => {
+          if (data && data.type === 'STATE_SYNC') {
+            gameState = data.state;
+            saveAndBroadcastState();
+          }
+        });
+      });
+    }
+
+    function handleIncomingClientAction(packet) {
+      if (!packet) return;
+      if (packet.type === 'TEAM_UPDATE') {
+        gameState.teams[packet.teamId] = packet.teamData;
+      } else if (packet.type === 'CHAT_MSG') {
+        gameState.chatMessages.push(packet.msg);
+      }
+      saveAndBroadcastState();
+    }
+
+    /**************************************************************
+     * 3. ROLE & NAVIGATION SWITCHING
+     **************************************************************/
+    function switchRoleView(role) {
+      currentRole = role;
+      document.getElementById('view-landing').classList.toggle('hidden', role !== 'landing');
+      document.getElementById('view-host').classList.toggle('hidden', role !== 'host');
+      document.getElementById('view-captain').classList.toggle('hidden', role !== 'captain');
+
+      const roleBadge = document.getElementById('roleBadge');
+      if (role === 'host') {
+        roleBadge.textContent = '🖥️ Режим: Ведучий семінару';
+      } else if (role === 'captain') {
+        const t = gameState.teams[currentCaptainTeamId];
+        roleBadge.textContent = `📱 Капітан: ${t.name}`;
+      } else {
+        roleBadge.textContent = 'Режим: Вибір ролі';
+      }
+      renderAll();
+    }
+
+    function enterHostMode() {
+      switchRoleView('host');
+      renderQRBox();
+    }
+
+    function enterHostModeAndSimulate() {
+      switchRoleView('host');
+      hostSetStage('round1');
+      simulateBotSubmissionsForCurrentStage();
+      hostCalculateAndRevealCurrentRound();
+    }
+
+    function enterCaptainMode() {
+      const sel = document.getElementById('captainTeamSelect');
+      currentCaptainTeamId = parseInt(sel.value, 10) || 0;
+      const roomInput = document.getElementById('joinRoomCodeInput').value.trim();
+      if (roomInput) {
+        connectCaptainToCloudHost(roomInput);
+      }
+      switchRoleView('captain');
+      populateCaptainInputsFromState();
+    }
+
+    function hostSetStage(stageName) {
+      gameState.stage = stageName;
+      if (stageName === 'round1') setTimerMinutes(12, false);
+      if (stageName === 'round2') setTimerMinutes(15, false);
+      if (stageName === 'round3') setTimerMinutes(12, false);
+      saveAndBroadcastState();
+    }
+
+    function hostSetOligopolySubround(sub) {
+      gameState.oligopolySubround = sub;
+      saveAndBroadcastState();
+    }
+
+    function captainSwitchTab(tabStage) {
+      document.getElementById('cap-panel-round1').classList.toggle('hidden', tabStage !== 'round1');
+      document.getElementById('cap-panel-round2').classList.toggle('hidden', tabStage !== 'round2');
+      document.getElementById('cap-panel-round3').classList.toggle('hidden', tabStage !== 'round3');
+
+      document.getElementById('capTabBtn1').classList.toggle('btn-primary', tabStage === 'round1');
+      document.getElementById('capTabBtn2').classList.toggle('btn-primary', tabStage === 'round2');
+      document.getElementById('capTabBtn3').classList.toggle('btn-primary', tabStage === 'round3');
+    }
+
+    /**************************************************************
+     * 4. TIMER LOGIC
+     **************************************************************/
+    function setTimerMinutes(mins, autoStart = false) {
+      gameState.timerSeconds = mins * 60;
+      gameState.timerRunning = autoStart;
+      saveAndBroadcastState();
+    }
+
+    function toggleTimer() {
+      gameState.timerRunning = !gameState.timerRunning;
+      if (gameState.timerRunning && !timerInterval) {
+        timerInterval = setInterval(() => {
+          if (gameState.timerRunning && gameState.timerSeconds > 0) {
+            gameState.timerSeconds--;
+            updateTimerUI();
+            if (gameState.timerSeconds % 5 === 0) saveAndBroadcastState();
+          } else if (gameState.timerSeconds <= 0) {
+            gameState.timerRunning = false;
+            saveAndBroadcastState();
+          }
+        }, 1000);
+      }
+      saveAndBroadcastState();
+    }
+
+    function updateTimerUI() {
+      const m = String(Math.floor(gameState.timerSeconds / 60)).padStart(2, '0');
+      const s = String(gameState.timerSeconds % 60).padStart(2, '0');
+      const formatted = `${m}:${s}`;
+      const hostEl = document.getElementById('hostTimerDisplay');
+      const capEl = document.getElementById('capTimerDisplay');
+      if (hostEl) {
+        hostEl.textContent = formatted;
+        hostEl.classList.toggle('urgent', gameState.timerSeconds <= 60);
+      }
+      if (capEl) {
+        capEl.textContent = formatted;
+      }
+      const btn = document.getElementById('btnTimerToggle');
+      if (btn) {
+        btn.textContent = gameState.timerRunning ? '⏸️ Пауза' : '▶️ Старт';
+      }
+    }
+
+    /**************************************************************
+     * 5. CAPTAIN INTERACTIONS & ROUND SUBMISSIONS
+     **************************************************************/
+    function populateCaptainInputsFromState() {
+      const t = gameState.teams[currentCaptainTeamId];
+      if (!t) return;
+      document.getElementById('capTeamNameInput').value = t.name;
+      document.getElementById('capTeamEmoji').textContent = t.emoji;
+      document.getElementById('r1_breakeven').value = t.r1.breakeven;
+      document.getElementById('r1_markup').value = t.r1.markup;
+      document.getElementById('r1_costplus').value = t.r1.costplus;
+      document.getElementById('r1_target').value = t.r1.target;
+      document.getElementById('r1_lerner').value = t.r1.lerner;
+      document.getElementById('r1_actualPrice').value = t.r1.actualPrice;
+      document.getElementById('r1_strategy').value = t.r1.strategy;
+      updateCorridorVisual(t.r1.actualPrice);
+
+      const currentSubPrice = gameState.oligopolySubround === 1 ? t.r2.price1 : t.r2.price2;
+      document.getElementById('r2_oligopolyPrice').value = currentSubPrice;
+      document.getElementById('r2_priceVal').textContent = currentSubPrice;
+      document.getElementById('r2_tactic').value = t.r2.tactic;
+      document.getElementById('r2_sunkDecision').value = t.r2.sunkDecision;
+
+      document.getElementById('r3_p1').value = t.r3.p1;
+      document.getElementById('r3_p2').value = t.r3.p2;
+      document.getElementById('r3_tenderBid').value = t.r3.tenderBid;
+      previewDiscriminationMath();
+      updateTenderPreview(t.r3.tenderBid);
+    }
+
+    function captainUpdateTeamName(newName) {
+      if (!newName.trim()) return;
+      const t = gameState.teams[currentCaptainTeamId];
+      t.name = newName.trim();
+      saveAndBroadcastState({ type: 'TEAM_UPDATE', teamId: currentCaptainTeamId, teamData: t });
+    }
+
+    function updateCorridorVisual(val) {
+      const p = parseFloat(val) || 200;
+      document.getElementById('r1_priceVal').textContent = p;
+      const pct = Math.max(0, Math.min(100, ((p - 110) / (260 - 110)) * 100));
+      const marker = document.getElementById('r1_corridorMarker');
+      if (marker) marker.style.left = pct + '%';
+
+      const hint = document.getElementById('r1_corridorZoneHint');
+      if (!hint) return;
+      if (p < 120) {
+        hint.style.color = 'var(--danger)';
+        hint.textContent = '🚨 Критичний збиток: ціна нижча за AVC (120 грн) — негайне закриття у короткому періоді!';
+      } else if (p < 180) {
+        hint.style.color = 'var(--warning)';
+        hint.textContent = '⚠️ Короткострокове виживання: покриває AVC (120 грн), але не покриває повні витрати ATC (180 грн).';
+      } else if (p <= 225) {
+        hint.style.color = 'var(--success)';
+        hint.textContent = '✅ Ефективний коридор «3С»: покриває ATC (180 грн) та генерує економічний прибуток.';
+      } else {
+        hint.style.color = '#60a5fa';
+        hint.textContent = '👑 Висока преміум-ціна («Зняття вершків»): висока маржа на одиницю, але попит суттєво скоротиться.';
+      }
+    }
+
+    function selectMatrixCell(cellKey, el) {
+      selectedMatrixCell = cellKey;
+      document.querySelectorAll('#r1_matrixGrid .matrix-cell').forEach(c => c.classList.remove('selected'));
+      if (el) el.classList.add('selected');
+    }
+
+    function submitCaptainRound1() {
+      const t = gameState.teams[currentCaptainTeamId];
+      t.r1.breakeven = parseFloat(document.getElementById('r1_breakeven').value) || 0;
+      t.r1.markup = parseFloat(document.getElementById('r1_markup').value) || 0;
+      t.r1.costplus = parseFloat(document.getElementById('r1_costplus').value) || 0;
+      t.r1.target = parseFloat(document.getElementById('r1_target').value) || 0;
+      t.r1.lerner = parseFloat(document.getElementById('r1_lerner').value) || 0;
+      t.r1.actualPrice = parseFloat(document.getElementById('r1_actualPrice').value) || 200;
+      t.r1.strategy = document.getElementById('r1_strategy').value;
+      t.r1.matrix = selectedMatrixCell;
+      t.r1.submitted = true;
+
+      saveAndBroadcastState({ type: 'TEAM_UPDATE', teamId: currentCaptainTeamId, teamData: t });
+    }
+
+    function captainSendChat() {
+      const inp = document.getElementById('capChatInput');
+      const text = inp.value.trim();
+      if (!text) return;
+      const t = gameState.teams[currentCaptainTeamId];
+      sendChatMessage(`${t.emoji} ${t.name}`, text, false);
+      inp.value = '';
+    }
+
+    function sendChatMessage(sender, text, isSystem = false) {
+      if (!text || !text.trim()) return;
+      const now = new Date();
+      const timeStr = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+      const msg = { sender, text: text.trim(), time: timeStr, isSystem };
+      gameState.chatMessages.push(msg);
+      const hostInp = document.getElementById('hostChatInput');
+      if (isSystem && hostInp) hostInp.value = '';
+      saveAndBroadcastState({ type: 'CHAT_MSG', msg });
+    }
+
+    function submitCaptainRound2() {
+      const t = gameState.teams[currentCaptainTeamId];
+      const p = parseFloat(document.getElementById('r2_oligopolyPrice').value) || 220;
+      if (gameState.oligopolySubround === 1) {
+        t.r2.price1 = p;
+        t.r2.sub1Submitted = true;
+      } else {
+        t.r2.price2 = p;
+        t.r2.sub2Submitted = true;
+      }
+      t.r2.tactic = document.getElementById('r2_tactic').value;
+      t.r2.sunkDecision = document.getElementById('r2_sunkDecision').value;
+      saveAndBroadcastState({ type: 'TEAM_UPDATE', teamId: currentCaptainTeamId, teamData: t });
+    }
+
+    function previewDiscriminationMath() {
+      const p1 = parseFloat(document.getElementById('r3_p1').value) || 0;
+      const p2 = parseFloat(document.getElementById('r3_p2').value) || 0;
+      const q1 = Math.max(0, 100 - p1);
+      const q2 = Math.max(0, 120 - 2 * p2);
+      const mr1 = 100 - 2 * q1;
+      const mr2 = 60 - q2;
+      const box = document.getElementById('r3_discPreview');
+      if (box) {
+        box.innerHTML = `При P₁ = <strong>${p1}</strong> та P₂ = <strong>${p2}</strong>: обсяги Q₁ = <strong>${q1}</strong>, Q₂ = <strong>${q2}</strong> | Граничний дохід: MR₁ = <strong>${mr1}</strong>, MR₂ = <strong>${mr2}</strong> (оптимум при MR₁ = MR₂ = MC = 20).`;
+      }
+    }
+
+    function computeWinProbability(bid) {
+      // Smooth probability curve between 400k (Pr=0.95) and 900k (Pr=0.05)
+      if (bid <= 400000) return 0.98;
+      if (bid >= 900000) return 0.02;
+      const norm = (bid - 400000) / 500000; // 0 to 1
+      return Math.max(0.04, Math.min(0.96, +(1 - Math.pow(norm, 1.15) * 0.94).toFixed(2)));
+    }
+
+    function updateTenderPreview(val) {
+      const bid = parseFloat(val) || 620000;
+      document.getElementById('r3_bidVal').textContent = bid.toLocaleString('uk-UA');
+      const margin = bid - 400000;
+      const pr = computeWinProbability(bid);
+      const expProfit = Math.round(margin * pr);
+      const box = document.getElementById('r3_tenderMathBox');
+      if (box) {
+        box.innerHTML = `
+          • Маржа контракту (P − C): <strong>+${margin.toLocaleString('uk-UA')} грн</strong><br/>
+          • Оціночна ймовірність перемоги Pr(P): <strong>${Math.round(pr * 100)}%</strong><br/>
+          • Очікуваний прибуток (P − C) × Pr(P): <strong style="color: var(--accent-amber);">+${expProfit.toLocaleString('uk-UA')} грн</strong>
+        `;
+      }
+    }
+
+    function submitCaptainRound3() {
+      const t = gameState.teams[currentCaptainTeamId];
+      t.r3.p1 = parseFloat(document.getElementById('r3_p1').value) || 60;
+      t.r3.p2 = parseFloat(document.getElementById('r3_p2').value) || 40;
+      t.r3.tenderBid = parseFloat(document.getElementById('r3_tenderBid').value) || 620000;
+      t.r3.submitted = true;
+      saveAndBroadcastState({ type: 'TEAM_UPDATE', teamId: currentCaptainTeamId, teamData: t });
+    }
+
+    /**************************************************************
+     * 6. ECONOMIC ENGINE & ROUND SCORING (EXACT LECTURE MATH)
+     **************************************************************/
+    function hostCalculateAndRevealCurrentRound() {
+      if (gameState.stage === 'round1') {
+        calculateRound1Scores();
+        gameState.round1Revealed = true;
+      } else if (gameState.stage === 'round2') {
+        calculateRound2Scores();
+        if (gameState.oligopolySubround === 1) {
+          gameState.round2Sub1Revealed = true;
+        } else {
+          gameState.round2Revealed = true;
+        }
+      } else if (gameState.stage === 'round3') {
+        calculateRound3Scores();
+        gameState.round3Revealed = true;
+      }
+      recalculateTotalBalances();
+      saveAndBroadcastState();
+    }
+
+    function calculateRound1Scores() {
+      // Exact answers from Lecture Block 4.2:
+      // Breakeven = 180, Markup rule = 200, Cost-plus = 216, Target return = 220, Lerner = 0.4
+      gameState.teams.forEach(t => {
+        let bonus = 0;
+        if (Math.abs(t.r1.breakeven - 180) <= 1) bonus += 30000;
+        if (Math.abs(t.r1.markup - 200) <= 1) bonus += 30000;
+        if (Math.abs(t.r1.costplus - 216) <= 1) bonus += 30000;
+        if (Math.abs(t.r1.target - 220) <= 1) bonus += 30000;
+        if (Math.abs(t.r1.lerner - 0.4) <= 0.03) bonus += 30000;
+
+        // Consistency bonus between chosen strategy and actual price
+        const p = t.r1.actualPrice;
+        if ((t.r1.strategy === 'penetration' && p <= 205) || (t.r1.strategy === 'skimming' && p >= 210)) {
+          bonus += 40000;
+        }
+        t.r1.bonusEarned = bonus;
+
+        // Constant elasticity demand curve calibrated so Q(200) = 5000 and E = -2.5:
+        // Q(P) = 5000 * (P / 200)^(-2.5)
+        const qSold = Math.round(5000 * Math.pow(p / 200, -2.5));
+        const operatingProfit = Math.round((p - 120) * qSold - 300000);
+        t.r1.profitEarned = operatingProfit;
+
+        // Apply economy of scale in Round 2 if Penetration strategy chosen with P <= 202
+        if (t.r1.strategy === 'penetration' && p <= 202) {
+          t.hasScaleEffect = true;
+          t.avc = 110;
+        } else {
+          t.hasScaleEffect = false;
+          t.avc = 120;
+        }
+      });
+    }
+
+    function computeSweezyOligopolySubround(prices, avcs) {
+      // Kinked demand curve (Sweezy) & Bertrand competition:
+      // Reference price = average price of the 4 networks
+      const avgP = prices.reduce((a, b) => a + b, 0) / prices.length;
+      // Total market volume depends slightly on average industry price
+      const totalMarketQ = 22000 * Math.pow(avgP / 220, -1.1);
+
+      return prices.map((p, idx) => {
+        const diff = p - avgP;
+        // Kinked demand: raising price above competitors (diff > 0) is heavily penalized (elasticity -4.2)
+        // Lowering price below competitors (diff < 0) captures huge share from rivals
+        let shareWeight = 1.0;
+        if (diff > 0) {
+          shareWeight = Math.exp(-0.065 * diff); // steep drop in customers
+        } else {
+          shareWeight = Math.exp(-0.042 * diff); // surge in customers
+        }
+        return { p, diff, shareWeight, avc: avcs[idx] };
+      }).map((item, idx, arr) => {
+        const sumWeights = arr.reduce((s, x) => s + x.shareWeight, 0);
+        const marketShare = item.shareWeight / sumWeights;
+        const q = Math.round(totalMarketQ * marketShare);
+        const profit = Math.round((item.p - item.avc) * q - 150000); // 150k FC per subround
+        return { q, marketShare: +(marketShare * 100).toFixed(1), profit };
+      });
+    }
+
+    function calculateRound2Scores() {
+      const prices1 = gameState.teams.map(t => t.r2.price1);
+      const prices2 = gameState.teams.map(t => t.r2.price2);
+      const avcs = gameState.teams.map(t => t.avc);
+
+      const res1 = computeSweezyOligopolySubround(prices1, avcs);
+      const res2 = computeSweezyOligopolySubround(prices2, avcs);
+
+      // Check AMKU Cartel Investigation condition:
+      // Triggered if Host checked force box OR if all teams set high prices within 2 UAH of each other (>= 230)
+      const maxP2 = Math.max(...prices2);
+      const minP2 = Math.min(...prices2);
+      const suspiciousIdenticalCartel = (minP2 >= 232 && (maxP2 - minP2) <= 1);
+      const forceAmku = document.getElementById('amkuForceCheck') && document.getElementById('amkuForceCheck').checked;
+      gameState.amkuTriggered = forceAmku || suspiciousIdenticalCartel;
+
+      gameState.teams.forEach((t, i) => {
+        t.r2.profitSub1 = res1[i].profit;
+        t.r2.shareSub1 = res1[i].marketShare;
+        t.r2.qSub1 = res1[i].q;
+
+        if (gameState.oligopolySubround === 2) {
+          t.r2.profitSub2 = res2[i].profit;
+          t.r2.shareSub2 = res2[i].marketShare;
+          t.r2.qSub2 = res2[i].q;
+
+          // Sunk Costs Blitz (2,000 units at 140 UAH vs AVC = 120 or 110)
+          if (t.r2.sunkDecision === 'accept') {
+            t.r2.sunkProfit = (140 - t.avc) * 2000; // +40,000 or +60,000 UAH!
+          } else {
+            t.r2.sunkProfit = 0; // Missed opportunity due to sunk cost fallacy
+          }
+
+          // AMKU fine if cartel detected
+          if (gameState.amkuTriggered && t.r2.price2 >= 230) {
+            t.r2.amkuFine = 95000;
+          } else {
+            t.r2.amkuFine = 0;
+          }
+        }
+      });
+    }
+
+    function calculateRound3Scores() {
+      // Part A: 3rd degree price discrimination (Q1 = 100 - P1, Q2 = 120 - 2P2, MC = 20, multiplier x100 UAH)
+      gameState.teams.forEach(t => {
+        const q1 = Math.max(0, 100 - t.r3.p1);
+        const q2 = Math.max(0, 120 - 2 * t.r3.p2);
+        const rawProfit = (t.r3.p1 - 20) * q1 + (t.r3.p2 - 20) * q2; // Max is 2400 at P1=60, P2=40
+        t.r3.discProfit = Math.round(rawProfit * 100); // Max = 240,000 UAH
+
+        // Part B1: Expected profit from sealed-bid formula (P - C) * Pr(win)
+        const pr = computeWinProbability(t.r3.tenderBid);
+        t.r3.tenderExpectedProfit = Math.round((t.r3.tenderBid - 400000) * pr);
+        t.r3.tenderWonBonus = 0;
+        t.r3.isTenderWinner = false;
+      });
+
+      // Part B2: Actual lowest valid bid (> 400,000) wins the state contract!
+      const validTeams = gameState.teams.filter(t => t.r3.tenderBid > 400000);
+      if (validTeams.length > 0) {
+        const minBid = Math.min(...validTeams.map(t => t.r3.tenderBid));
+        const winners = validTeams.filter(t => t.r3.tenderBid === minBid);
+        const contractMargin = minBid - 400000;
+        winners.forEach(w => {
+          w.r3.isTenderWinner = true;
+          w.r3.tenderWonBonus = Math.round(contractMargin / winners.length);
+        });
+      }
+    }
+
+    function recalculateTotalBalances() {
+      gameState.teams.forEach(t => {
+        let total = 500000;
+        if (gameState.round1Revealed) {
+          total += t.r1.profitEarned + t.r1.bonusEarned;
+        }
+        if (gameState.round2Sub1Revealed || gameState.round2Revealed) {
+          total += t.r2.profitSub1;
+        }
+        if (gameState.round2Revealed) {
+          total += t.r2.profitSub2 + t.r2.sunkProfit - t.r2.amkuFine;
+        }
+        if (gameState.round3Revealed) {
+          total += t.r3.discProfit + t.r3.tenderExpectedProfit + t.r3.tenderWonBonus;
+        }
+        t.balance = total;
+      });
+    }
+
+    /**************************************************************
+     * 7. BOT SIMULATION (FOR INSTANT TESTING OR MISSING TEAMS)
+     **************************************************************/
+    function simulateBotSubmissionsForCurrentStage() {
+      if (gameState.stage === 'lobby' || gameState.stage === 'round1') {
+        const samplePrices = [200, 216, 194, 225];
+        const sampleStrats = ['penetration', 'skimming', 'penetration', 'skimming'];
+        const sampleMat = ['high_mid', 'high_high', 'high_low', 'high_high'];
+        gameState.teams.forEach((t, i) => {
+          t.r1.breakeven = 180;
+          t.r1.markup = i === 3 ? 210 : 200;
+          t.r1.costplus = 216;
+          t.r1.target = 220;
+          t.r1.lerner = 0.4;
+          t.r1.actualPrice = samplePrices[i % 4];
+          t.r1.strategy = sampleStrats[i % 4];
+          t.r1.matrix = sampleMat[i % 4];
+          t.r1.submitted = true;
+        });
+      } else if (gameState.stage === 'round2') {
+        const p1s = [236, 238, 204, 237]; // Team 3 betrays the cartel!
+        const p2s = [212, 215, 202, 220];
+        const sunks = ['accept', 'accept', 'accept', 'reject'];
+        gameState.teams.forEach((t, i) => {
+          if (gameState.oligopolySubround === 1) {
+            t.r2.price1 = p1s[i % 4];
+            t.r2.sub1Submitted = true;
+          } else {
+            t.r2.price2 = p2s[i % 4];
+            t.r2.sub2Submitted = true;
+          }
+          t.r2.sunkDecision = sunks[i % 4];
+        });
+        if (gameState.chatMessages.length < 3) {
+          gameState.chatMessages.push(
+            { sender: '⛽ OKKO-Tech', text: 'Колеги, пропоную цінове лідерство: тримаємо коридор 236–239 грн, щоб всі заробили і АМКУ не причепився!', time: '12:04', isSystem: false },
+            { sender: '🔥 UPG-Prime', text: 'Звучить справедливо, підтримуємо 237 грн 🤝 (або ні 😉)', time: '12:05', isSystem: false }
+          );
+        }
+      } else if (gameState.stage === 'round3') {
+        const p1s = [60, 56, 60, 47];
+        const p2s = [40, 42, 39, 47];
+        const bids = [615000, 645000, 565000, 690000];
+        gameState.teams.forEach((t, i) => {
+          t.r3.p1 = p1s[i % 4];
+          t.r3.p2 = p2s[i % 4];
+          t.r3.tenderBid = bids[i % 4];
+          t.r3.submitted = true;
+        });
+      }
+      saveAndBroadcastState();
+    }
+
+    /**************************************************************
+     * 8. UI RENDERING
+     **************************************************************/
+    function renderAll() {
+      updateTimerUI();
+      renderHostView();
+      renderCaptainView();
+      renderChatBoxes();
+      renderHostOverrideModal();
+    }
+
+    function renderHostView() {
+      if (currentRole !== 'host') return;
+
+      // Highlight active step pill
+      const stages = ['lobby', 'round1', 'round2', 'round3', 'finale'];
+      stages.forEach((st, idx) => {
+        const pill = document.getElementById('hostStep' + idx);
+        if (pill) pill.classList.toggle('active', gameState.stage === st);
+        const container = document.getElementById('host-stage-' + st);
+        if (container) container.classList.toggle('hidden', gameState.stage !== st);
+      });
+
+      document.getElementById('hostRoomCodeBadge').textContent = 'Код кімнати: ' + gameState.roomCode;
+      document.getElementById('hostBigRoomCode').textContent = gameState.roomCode;
+
+      // Render 4 Gas Station Pylons
+      const pylonContainer = document.getElementById('hostTeamPylons');
+      if (pylonContainer) {
+        pylonContainer.innerHTML = gameState.teams.map(t => {
+          let isReady = false;
+          let displayPrice = '---';
+          let statusLabel = 'Думають у залі...';
+
+          if (gameState.stage === 'round1') {
+            isReady = t.r1.submitted;
+            displayPrice = gameState.round1Revealed ? `${t.r1.actualPrice} ₴` : (isReady ? '🔒 ЗДАНО' : '⏳ ...');
+            statusLabel = isReady ? 'Рішення зафіксовано ✅' : 'Рахують 4 методи...';
+          } else if (gameState.stage === 'round2') {
+            isReady = gameState.oligopolySubround === 1 ? t.r2.sub1Submitted : t.r2.sub2Submitted;
+            const rev = gameState.oligopolySubround === 1 ? gameState.round2Sub1Revealed : gameState.round2Revealed;
+            const pVal = gameState.oligopolySubround === 1 ? t.r2.price1 : t.r2.price2;
+            displayPrice = rev ? `${pVal} ₴` : (isReady ? '🔒 ЗДАНО' : '⏳ ...');
+            statusLabel = isReady ? `Хід 2.${gameState.oligopolySubround} здано ✅` : `Обговорюють у чаті...`;
+          } else if (gameState.stage === 'round3') {
+            isReady = t.r3.submitted;
+            displayPrice = gameState.round3Revealed ? `${(t.r3.tenderBid / 1000).toFixed(0)}k ₴` : (isReady ? '🔒 КОНВЕРТ' : '⏳ ...');
+            statusLabel = isReady ? 'Конверт запечатано ✅' : 'Готують тендер...';
+          } else {
+            isReady = true;
+            displayPrice = `${t.r1.actualPrice} ₴`;
+            statusLabel = 'У грі ✅';
+          }
+
+          return `
+            <div class="pylon-card ${isReady ? 'ready' : ''}">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <strong style="font-size: 15px;">${t.emoji} ${t.name}</strong>
+                <span class="badge ${isReady ? 'badge-teal' : ''}" style="font-size: 11px;">
+                  AVC: ${t.avc} ₴
+                </span>
+              </div>
+              <div class="led-price">${displayPrice}</div>
+              <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted);">
+                <span>${statusLabel}</span>
+                <strong style="color: var(--success);">${t.balance.toLocaleString('uk-UA')} ₴</strong>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // Render Round 1 Reveal Table
+      const r1Box = document.getElementById('hostRound1RevealContent');
+      if (r1Box && gameState.round1Revealed) {
+        r1Box.innerHTML = `
+          <div class="formula-box" style="margin-bottom: 10px;">
+            <strong>Еталон з плану лекції (Блок 4.2):</strong> Беззбитковість = <strong>180 ₴</strong> | Правило націнки = <strong>200 ₴</strong> | Витрати плюс 20% = <strong>216 ₴</strong> | Цільовий прибуток = <strong>220 ₴</strong> | Індекс Лернера L = <strong>0,40</strong>.
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Команда</th>
+                <th>Стратегія</th>
+                <th class="num">Ціна P₁</th>
+                <th class="num">Бонус за розрахунки</th>
+                <th class="num">Прибуток ринку</th>
+                <th>Ефект масштабу</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${gameState.teams.map(t => `
+                <tr>
+                  <td><strong>${t.emoji} ${t.name}</strong></td>
+                  <td>${t.r1.strategy === 'penetration' ? '🚀 Проникнення' : '👑 Зняття вершків'}</td>
+                  <td class="num">${t.r1.actualPrice} ₴</td>
+                  <td class="num" style="color: var(--accent-amber);">+${t.r1.bonusEarned.toLocaleString('uk-UA')} ₴</td>
+                  <td class="num" style="color: ${t.r1.profitEarned >= 0 ? 'var(--success)' : 'var(--danger)'};">
+                    ${t.r1.profitEarned >= 0 ? '+' : ''}${t.r1.profitEarned.toLocaleString('uk-UA')} ₴
+                  </td>
+                  <td>${t.hasScaleEffect ? '<span class="badge badge-teal">AVC → 110 ₴</span>' : '<span style="color:var(--text-muted)">AVC = 120 ₴</span>'}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        `;
+      }
+
+      // Render Round 2 Subround buttons & Reveal Table
+      const subLbl = document.getElementById('hostCurrentSubroundLabel');
+      if (subLbl) subLbl.textContent = '2.' + gameState.oligopolySubround;
+      document.getElementById('btnSubround2_1').classList.toggle('btn-primary', gameState.oligopolySubround === 1);
+      document.getElementById('btnSubround2_2').classList.toggle('btn-primary', gameState.oligopolySubround === 2);
+
+      const r2Box = document.getElementById('hostRound2RevealContent');
+      if (r2Box && (gameState.round2Sub1Revealed || gameState.round2Revealed)) {
+        r2Box.innerHTML = `
+          ${gameState.amkuTriggered && gameState.round2Revealed ? `
+            <div class="badge badge-danger" style="width: 100%; justify-content: center; padding: 8px; margin-bottom: 10px;">
+              🚨 АНТИМОНОПОЛЬНИЙ КОМІТЕТ (АМКУ) ВИЯВИВ КАРТЕЛЬНУ ЗМОВУ! Штраф −95 000 ₴ для учасників із високою ціною.
+            </div>
+          ` : ''}
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Мережа АЗК</th>
+                <th class="num">Хід 2.1 (Частка)</th>
+                <th class="num">Прибуток 2.1</th>
+                <th class="num">Хід 2.2 (Частка)</th>
+                <th class="num">Бліц Sunk Costs</th>
+                <th class="num">Разом за Раунд 2</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${gameState.teams.map(t => {
+                const totalR2 = t.r2.profitSub1 + (gameState.round2Revealed ? (t.r2.profitSub2 + t.r2.sunkProfit - t.r2.amkuFine) : 0);
+                return `
+                  <tr>
+                    <td><strong>${t.emoji} ${t.name}</strong></td>
+                    <td class="num">${t.r2.price1} ₴ <small style="color:var(--text-muted)">(${t.r2.shareSub1 || 25}%)</small></td>
+                    <td class="num">${t.r2.profitSub1.toLocaleString('uk-UA')} ₴</td>
+                    <td class="num">${gameState.round2Revealed ? `${t.r2.price2} ₴ <small style="color:var(--text-muted)">(${t.r2.shareSub2}%)</small>` : '⏳'}</td>
+                    <td class="num" style="color: ${t.r2.sunkProfit > 0 ? 'var(--success)' : 'var(--danger)'};">
+                      ${gameState.round2Revealed ? (t.r2.sunkProfit > 0 ? `+${t.r2.sunkProfit.toLocaleString('uk-UA')} ₴ ✅` : '0 ₴ (Відмова ❌)') : '⏳'}
+                    </td>
+                    <td class="num" style="color: var(--accent-amber); font-weight: 800;">
+                      ${totalR2 >= 0 ? '+' : ''}${totalR2.toLocaleString('uk-UA')} ₴
+                    </td>
+                  </tr>
+                `;
+              }).join('')}
+            </tbody>
+          </table>
+        `;
+      }
+
+      // Render Round 3 Reveal Table
+      const r3Box = document.getElementById('hostRound3RevealContent');
+      if (r3Box && gameState.round3Revealed) {
+        r3Box.innerHTML = `
+          <div class="formula-box" style="margin-bottom: 10px;">
+            <strong>Еталон дискримінації 3-го ступеня (Блок 5.3):</strong> <code>P₁* = 60, Q₁ = 40 (E₁ = −1,5)</code> та <code>P₂* = 40, Q₂ = 40 (E₂ = −2)</code> → Максимальний прибуток = <strong>240 000 ₴</strong> (за єдиної ціни P ≈ 46,67 лише 213 333 ₴, тобто дискримінація дає <strong>+12,5%</strong>!).
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Мережа АЗК</th>
+                <th class="num">Ціни (P₁ / P₂)</th>
+                <th class="num">Прибуток сегментів</th>
+                <th class="num">Ставка тендеру P<sub>bid</sub></th>
+                <th class="num">Очікуваний E[π]</th>
+                <th class="num">Контракт тендеру</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${gameState.teams.map(t => `
+                <tr>
+                  <td><strong>${t.emoji} ${t.name}</strong></td>
+                  <td class="num">${t.r3.p1} / ${t.r3.p2}</td>
+                  <td class="num" style="color: var(--success);">+${t.r3.discProfit.toLocaleString('uk-UA')} ₴</td>
+                  <td class="num"><strong>${t.r3.tenderBid.toLocaleString('uk-UA')} ₴</strong></td>
+                  <td class="num">+${t.r3.tenderExpectedProfit.toLocaleString('uk-UA')} ₴</td>
+                  <td class="num">
+                    ${t.r3.isTenderWinner
+                      ? `<span class="badge badge-amber">🏆 ПЕРЕМОЖЕЦЬ (+${t.r3.tenderWonBonus.toLocaleString('uk-UA')} ₴)</span>`
+                      : '<span style="color:var(--text-muted)">Програш торгів</span>'}
+                  </td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        `;
+      }
+
+      // Render Finale Leaderboard & Kahoot Blitz
+      if (gameState.stage === 'finale') {
+        renderFinaleView();
+      }
+    }
+
+    function renderCaptainView() {
+      if (currentRole !== 'captain') return;
+      const t = gameState.teams[currentCaptainTeamId];
+      if (!t) return;
+
+      document.getElementById('capBalanceDisplay').textContent = t.balance.toLocaleString('uk-UA') + ' грн';
+      document.getElementById('capCostAdvantageBadge').style.display = t.hasScaleEffect ? 'inline-flex' : 'none';
+      document.getElementById('capCurrentAVC').textContent = t.avc;
+
+      // Sync active tab with Host stage if in round1/round2/round3
+      if (['round1', 'round2', 'round3'].includes(gameState.stage)) {
+        captainSwitchTab(gameState.stage);
+      }
+
+      document.getElementById('capR1StatusBadge').textContent = t.r1.submitted ? '✅ Рішення здано' : '⏳ Очікує рішення';
+      document.getElementById('capR1StatusBadge').className = 'badge ' + (t.r1.submitted ? 'badge-teal' : 'badge-amber');
+
+      const r2Sub = gameState.oligopolySubround === 1 ? t.r2.sub1Submitted : t.r2.sub2Submitted;
+      document.getElementById('capSubroundLabel').textContent = '2.' + gameState.oligopolySubround;
+      document.getElementById('capSubroundLabel2').textContent = '2.' + gameState.oligopolySubround;
+      document.getElementById('capR2StatusBadge').textContent = r2Sub ? `✅ Хід 2.${gameState.oligopolySubround} здано` : `⏳ Очікує Хід 2.${gameState.oligopolySubround}`;
+      document.getElementById('capR2StatusBadge').className = 'badge ' + (r2Sub ? 'badge-teal' : 'badge-amber');
+
+      document.getElementById('capR3StatusBadge').textContent = t.r3.submitted ? '✅ Конверт запечатано' : '⏳ Очікує рішення';
+      document.getElementById('capR3StatusBadge').className = 'badge ' + (t.r3.submitted ? 'badge-teal' : 'badge-amber');
+    }
+
+    function renderChatBoxes() {
+      const html = gameState.chatMessages.map(m => `
+        <div class="chat-msg" style="border-left-color: ${m.isSystem ? 'var(--danger)' : 'var(--accent-amber)'};">
+          <div class="chat-meta">
+            <strong>${m.sender}</strong>
+            <span>${m.time}</span>
+          </div>
+          <div>${m.text}</div>
+        </div>
+      `).join('');
+
+      const hostBox = document.getElementById('hostChatBox');
+      const capBox = document.getElementById('capChatBox');
+      if (hostBox) {
+        hostBox.innerHTML = html;
+        hostBox.scrollTop = hostBox.scrollHeight;
+      }
+      if (capBox) {
+        capBox.innerHTML = html;
+        capBox.scrollTop = capBox.scrollHeight;
+      }
+    }
+
+    function renderQRBox() {
+      const container = document.getElementById('qrCanvasContainer');
+      if (!container) return;
+      const url = window.location.href.split('?')[0] + '?room=' + encodeURIComponent(gameState.roomCode);
+      document.getElementById('hostJoinLinkText').textContent = url;
+
+      // Render a crisp deterministic SVG matrix pattern + room badge so it works offline & online
+      const codeStr = gameState.roomCode || 'LOCAL';
+      let cells = '';
+      for (let r = 0; r < 11; r++) {
+        for (let c = 0; c < 11; c++) {
+          const isFinder = (r < 3 && c < 3) || (r < 3 && c > 7) || (r > 7 && c < 3);
+          const hash = (codeStr.charCodeAt((r + c) % codeStr.length) * (r + 1) * (c + 3)) % 7;
+          if (isFinder || hash < 3) {
+            cells += `<rect x="${c * 14 + 8}" y="${r * 14 + 8}" width="12" height="12" rx="2" fill="#0f172a"/>`;
+          }
+        }
+      }
+      container.innerHTML = `
+        <svg viewBox="0 0 170 170" width="165" height="165">
+          <rect width="170" height="170" fill="#ffffff" rx="8"/>
+          ${cells}
+          <rect x="35" y="68" width="100" height="34" rx="6" fill="#f59e0b"/>
+          <text x="85" y="90" text-anchor="middle" fill="#0f172a" font-family="monospace" font-weight="800" font-size="13">${codeStr}</text>
+        </svg>
+      `;
+    }
+
+    /**************************************************************
+     * 9. FINALE VIEW & KAHOOT 10 QUESTIONS (FROM LECTURE PDF PAGE 9)
+     **************************************************************/
+    const lectureKahootQuestions = [
+      { q: '1. Граничні витрати MC = 50 грн, еластичність попиту E = −2. Яка оптимальна ціна P*?', opts: ['75 грн', '100 грн', '125 грн', '150 грн'], ans: 1, exp: 'За формулою P* = MC × E / (1 + E) = 50 × (−2) / (−1) = 100 грн.' },
+      { q: '2. Чому дорівнює індекс Лернера (міра ринкової влади) при еластичності попиту E = −4?', opts: ['0,20', '0,25', '0,40', '0,75'], ans: 1, exp: 'L = −1 / E = −1 / (−4) = 0,25 (або 25% націнки у ціні).' },
+      { q: '3. У якій ринковій структурі фірма взагалі не має власної цінової стратегії?', opts: ['Монополістична конкуренція', 'Олігополія', 'Досконала конкуренція', 'Природна монополія'], ans: 2, exp: 'За досконалої конкуренції фірма є ціноодержувачем (P = MC).' },
+      { q: '4. Який показник є нижньою межею ціни фірми в короткостроковому періоді?', opts: ['AFC (середні постійні)', 'AVC (середні змінні)', 'ATC (середні загальні)', 'FC (постійні витрати)'], ans: 1, exp: 'У короткому періоді нижня межа ціни (точка закриття) — це P ≥ AVC.' },
+      { q: '5. Чи враховуються безповоротні витрати (sunk costs) під час прийняття рішення про ціну спецзамовлення?', opts: ['Так, завжди', 'Ні, вони нерелевантні', 'Тільки в олігополії', 'Тільки якщо FC > AVC'], ans: 1, exp: 'Безповоротні (sunk) витрати вже понесені й не залежать від рішення, тому вони нерелевантні.' },
+      { q: '6. Підприємство має AVC = 80 грн, FC = 100 000 грн, Q = 2 000 од. Яка ціна беззбитковості?', opts: ['100 грн', '120 грн', '130 грн', '160 грн'], ans: 2, exp: 'P = AVC + FC / Q = 80 + 100 000 / 2 000 = 130 грн.' },
+      { q: '7. Де фірма встановлює вищу ціну при ціновій дискримінації третього ступеня?', opts: ['Де попит більш еластичний', 'Де попит менш еластичний', 'Однакову на обох ринках', 'Де вищі постійні витрати'], ans: 1, exp: 'За правилом MR₁ = MR₂ = MC вища ціна встановлюється в сегменті з менш еластичним попитом.' },
+      { q: '8. Яка стратегія виведення нового товару доречна за сильного ефекту масштабу і високої еластичності?', opts: ['Зняття вершків', 'Проникнення (низьких цін)', 'Престижних цін', 'Тендерне ціноутворення'], ans: 1, exp: 'Стратегія проникнення дозволяє швидко наростити обсяг Q і знизити середні витрати завдяки ефекту масштабу.' },
+      { q: '9. За якої умови пакетування товарів (bundling) є економічно найвигіднішим?', opts: ['Оцінки товарів покупцями негативно корельовані', 'Попит абсолютно нееластичний', 'Граничні витрати вищі за ціну', 'На ринку досконала конкуренція'], ans: 0, exp: 'Пакетування найефективніше, коли резервні ціни покупців на компоненти пакету негативно корельовані.' },
+      { q: '10. Який головний недолік методу ціноутворення «витрати плюс» (cost-plus)?', opts: ['Складність розрахунку', 'Ігнорує попит, еластичність і конкурентів', 'Порушує антимонопольне законодавство', 'Завжди дає ціну нижче AVC'], ans: 1, exp: 'Метод «витрати плюс» ігнорує попит (готовність споживачів платити) та цінову еластичність.' }
+    ];
+
+    function renderFinaleView() {
+      const sorted = [...gameState.teams].sort((a, b) => b.balance - a.balance);
+      const medals = ['🥇 1 місце', '🥈 2 місце', '🥉 3 місце', '🏅 4 місце'];
+
+      const lbContainer = document.getElementById('finaleLeaderboardContainer');
+      if (lbContainer) {
+        lbContainer.innerHTML = `
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Місце</th>
+                <th>Команда (Мережа АЗК)</th>
+                <th class="num">Раунд 1 (Запуск + Бонус)</th>
+                <th class="num">Раунд 2 (Олігополія + Бліц)</th>
+                <th class="num">Раунд 3 (Сегменти + Тендер)</th>
+                <th class="num">Підсумковий капітал</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${sorted.map((t, idx) => {
+                const r1Sum = t.r1.profitEarned + t.r1.bonusEarned;
+                const r2Sum = t.r2.profitSub1 + t.r2.profitSub2 + t.r2.sunkProfit - t.r2.amkuFine;
+                const r3Sum = t.r3.discProfit + t.r3.tenderExpectedProfit + t.r3.tenderWonBonus;
+                return `
+                  <tr>
+                    <td><span class="badge ${idx === 0 ? 'badge-amber' : 'badge-teal'}">${medals[idx] || (idx + 1)}</span></td>
+                    <td><strong>${t.emoji} ${t.name}</strong></td>
+                    <td class="num">${r1Sum >= 0 ? '+' : ''}${r1Sum.toLocaleString('uk-UA')} ₴</td>
+                    <td class="num">${r2Sum >= 0 ? '+' : ''}${r2Sum.toLocaleString('uk-UA')} ₴</td>
+                    <td class="num">+${r3Sum.toLocaleString('uk-UA')} ₴</td>
+                    <td class="num" style="font-size: 16px; color: var(--accent-amber); font-weight: 800;">
+                      ${t.balance.toLocaleString('uk-UA')} ₴
+                    </td>
+                  </tr>
+                `;
+              }).join('')}
+            </tbody>
+          </table>
+        `;
+      }
+
+      const quizBox = document.getElementById('kahootQuizContainer');
+      if (quizBox && !quizBox.innerHTML.trim()) {
+        quizBox.innerHTML = lectureKahootQuestions.map((item, qIdx) => `
+          <div style="padding: 12px; border-bottom: 1px solid var(--border-subtle);">
+            <div style="font-weight: 700; font-size: 14px; margin-bottom: 8px;">${item.q}</div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              ${item.opts.map((opt, oIdx) => `
+                <button class="btn btn-sm btn-outline" onclick="checkKahootAnswer(${qIdx}, ${oIdx}, this)">
+                  ${opt}
+                </button>
+              `).join('')}
+            </div>
+            <div id="kahootExp_${qIdx}" class="form-hint hidden" style="margin-top: 6px; color: var(--accent-teal); font-weight: 600;">
+              💡 ${item.exp}
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+
+    function checkKahootAnswer(qIdx, oIdx, btnEl) {
+      const q = lectureKahootQuestions[qIdx];
+      const expEl = document.getElementById('kahootExp_' + qIdx);
+      if (expEl) expEl.classList.remove('hidden');
+      if (oIdx === q.ans) {
+        btnEl.style.background = 'var(--success)';
+        btnEl.style.color = '#052e16';
+      } else {
+        btnEl.style.background = 'var(--danger)';
+      }
+    }
+
+    /**************************************************************
+     * 10. MODALS, HOST OVERRIDE & CSV EXPORT
+     **************************************************************/
+    function toggleFormulaModal(show) {
+      document.getElementById('formulaModal').classList.toggle('open', show);
+    }
+
+    function toggleHostOverrideModal(show) {
+      document.getElementById('hostOverrideModal').classList.toggle('open', show);
+      if (show) renderHostOverrideModal();
+    }
+
+    function renderHostOverrideModal() {
+      const box = document.getElementById('hostOverrideTeamsTable');
+      if (!box) return;
+      box.innerHTML = `
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Команда</th>
+              <th>Ціна Р1 (грн)</th>
+              <th>Ціни Р2 (2.1 / 2.2)</th>
+              <th>Дискрим. P₁ / P₂</th>
+              <th>Тендер (грн)</th>
+              <th>Капітал (грн)</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${gameState.teams.map((t, idx) => `
+              <tr>
+                <td><input type="text" class="input" style="padding:5px 8px;" value="${t.name}" onchange="hostEditTeam(${idx}, 'name', this.value)" /></td>
+                <td><input type="number" class="input" style="padding:5px 8px; width:85px;" value="${t.r1.actualPrice}" onchange="hostEditTeam(${idx}, 'r1p', this.value)" /></td>
+                <td>
+                  <div style="display:flex; gap:4px;">
+                    <input type="number" class="input" style="padding:5px 6px; width:72px;" value="${t.r2.price1}" onchange="hostEditTeam(${idx}, 'r2p1', this.value)" />
+                    <input type="number" class="input" style="padding:5px 6px; width:72px;" value="${t.r2.price2}" onchange="hostEditTeam(${idx}, 'r2p2', this.value)" />
+                  </div>
+                </td>
+                <td>
+                  <div style="display:flex; gap:4px;">
+                    <input type="number" class="input" style="padding:5px 6px; width:64px;" value="${t.r3.p1}" onchange="hostEditTeam(${idx}, 'r3p1', this.value)" />
+                    <input type="number" class="input" style="padding:5px 6px; width:64px;" value="${t.r3.p2}" onchange="hostEditTeam(${idx}, 'r3p2', this.value)" />
+                  </div>
+                </td>
+                <td><input type="number" class="input" style="padding:5px 8px; width:110px;" value="${t.r3.tenderBid}" onchange="hostEditTeam(${idx}, 'bid', this.value)" /></td>
+                <td><input type="number" class="input" style="padding:5px 8px; width:115px;" value="${t.balance}" onchange="hostEditTeam(${idx}, 'balance', this.value)" /></td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function hostEditTeam(idx, field, val) {
+      const t = gameState.teams[idx];
+      if (!t) return;
+      if (field === 'name') t.name = val;
+      if (field === 'r1p') { t.r1.actualPrice = parseFloat(val) || 200; t.r1.submitted = true; }
+      if (field === 'r2p1') { t.r2.price1 = parseFloat(val) || 220; t.r2.sub1Submitted = true; }
+      if (field === 'r2p2') { t.r2.price2 = parseFloat(val) || 220; t.r2.sub2Submitted = true; }
+      if (field === 'r3p1') { t.r3.p1 = parseFloat(val) || 60; t.r3.submitted = true; }
+      if (field === 'r3p2') { t.r3.p2 = parseFloat(val) || 40; t.r3.submitted = true; }
+      if (field === 'bid') { t.r3.tenderBid = parseFloat(val) || 600000; t.r3.submitted = true; }
+      if (field === 'balance') { t.balance = parseFloat(val) || 500000; }
+      saveAndBroadcastState();
+    }
+
+    function resetEntireGame() {
+      gameState = createInitialState();
+      saveAndBroadcastState();
+      toggleHostOverrideModal(false);
+    }
+
+    function exportResultsCSV() {
+      const headers = ['Команда', 'Ціна_Р1', 'Стратегія_Р1', 'Ціна_Р2_1', 'Ціна_Р2_2', 'Sunk_Costs', 'Дискримінація_P1', 'Дискримінація_P2', 'Тендер_Ставка', 'Підсумковий_Капітал_грн'];
+      const rows = gameState.teams.map(t => [
+        t.name,
+        t.r1.actualPrice,
+        t.r1.strategy,
+        t.r2.price1,
+        t.r2.price2,
+        t.r2.sunkDecision,
+        t.r3.p1,
+        t.r3.p2,
+        t.r3.tenderBid,
+        t.balance
+      ]);
+      const csvContent = '\uFEFF' + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'fuel_barons_seminar_results.csv';
+      link.click();
+    }
+
+    // Auto-fill room code if URL has ?room=BARON-XXXX
+    window.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      const roomParam = params.get('room');
+      if (roomParam) {
+        const inp = document.getElementById('joinRoomCodeInput');
+        if (inp) inp.value = roomParam;
+      }
+      renderAll();
+    });
+  </script>
+</body>
+</html>
